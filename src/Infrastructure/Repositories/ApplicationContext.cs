@@ -1,7 +1,7 @@
 using domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.Repositories
+namespace infrastructure.Repositories
 {
     public class ApplicationContext : DbContext
     {
@@ -9,7 +9,9 @@ namespace Infrastructure.Repositories
         public DbSet<Owner> Owners { get; set; }
         public DbSet<SysAdmin> SysAdmins { get; set; }
         public DbSet<Addresses> Addresses { get; set; }
-
+        public DbSet<Booking> Bookings { get; set; }
+        
+        public DbSet<Client> Clients { get; set; } 
         public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options)
         {
         }

@@ -11,3 +11,9 @@ public enum DocumentType
     Passport = 2,
     License = 3
 }
+
+public enum ApprovalState { 
+    approved,
+    pending,
+    rejected
+}

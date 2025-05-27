@@ -23,6 +23,7 @@ namespace infrastructure.Repositories
             return _context.Set<T>().ToList();
         }
 
+
         public T? GetById<TId>(TId id)
         {
 
