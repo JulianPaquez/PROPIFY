@@ -59,15 +59,28 @@ public class OwnerController : ControllerBase
     {
         try
         {
-             _ownerService.Delete(id);
+            _ownerService.Delete(id);
             return Ok();
         }
         catch (System.Exception)
         {
-            
-             return StatusCode(500, "Propietario no encontrado");
+
+            return StatusCode(500, "Propietario no encontrado");
         }
     }
+    
+    [HttpPost("login")]
+public ActionResult<OwnerDTO> Login([FromBody] LoginRequest request)
+{
+    var owner = _ownerService.GetAll().FirstOrDefault(o => o.Email == request.Email && o.Password == request.Password);
+
+    if (owner == null)
+    {
+        return Unauthorized("Email o contraseña incorrectos.");
+    }
+
+    return Ok(owner);
+}
 
 
 }
