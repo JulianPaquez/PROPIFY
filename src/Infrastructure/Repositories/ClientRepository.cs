@@ -18,5 +18,5 @@ namespace infrastructure.Repositories
                 _context = context;
             }
         }
-    }
 }
+

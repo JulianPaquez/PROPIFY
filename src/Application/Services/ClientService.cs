@@ -49,7 +49,7 @@ namespace Application.Services
         }
         public async Task Update(int id, AddClientRequest request)
         {
-            var client = await GetClientById(id);
+            var client = await GetById(id);
             client.Name = request.Name;
             client.Surname = request.Surname;
             client.Email = request.Email;

@@ -19,15 +19,15 @@ namespace Application.Services
         {
             _bookingRepository = bookingRepository;
         }
-        public async Task<List<Booking>> GetAllBookings()
+        public async Task<List<Booking>> GetAll()
         {
             return _bookingRepository.GetAll();
         }
-        public async Task<Booking?> GetBookingById(int id)
+        public async Task<Booking?> GetById(int id)
         {
             return _bookingRepository.GetById(id);
         }
-        public async Task<Booking?> AddBooking(AddBookingRequest dto)
+        public async Task<Booking?> Create(AddBookingRequest dto)
         {
             var existingClient = /*await*/ _bookingRepository.GetAll();
             if (existingClient.Any(c => c.Id == dto.Id))
@@ -45,9 +45,9 @@ namespace Application.Services
 
             return /*await*/ _bookingRepository.Create(booking);
         }
-        public async Task UpdateBooking(int id, AddBookingRequest request)
+        public async Task Update(int id, AddBookingRequest request)
         {
-            var booking = await GetBookingById(id);
+            var booking = await GetById(id);
             booking.PropertyId = request.PropertyId;
             booking.UserId = request.UserId;
             booking.CheckInDate = request.CheckInDate;
@@ -57,7 +57,7 @@ namespace Application.Services
 
             return /*booking cuando se haga asincronica*/;
         }
-        public async Task DeleteBooking(Booking booking)
+        public async Task Delete(Booking booking)
         {
             /*await*/ _bookingRepository.Delete(booking);
         }
