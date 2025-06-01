@@ -1,3 +1,7 @@
+using application.Interfaces;
+using application.Services;
+using domain.Interfaces;
+using infrastructure.Repositories;
 using Infrastructure.Repositories;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
@@ -15,11 +19,13 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IPropertyService, PropertyService>();
 builder.Services.AddScoped<IOwnerService, OwnerService>();
 builder.Services.AddScoped<ISysAdminService, SysAdminService>();
+builder.Services.AddScoped<IReviewService,ReviewService>();
 
 // Repositories
 builder.Services.AddScoped<IPropertyRepository, PropertyRepository>();
 builder.Services.AddScoped<IOwnerRepository, OwnerRepository>();
 builder.Services.AddScoped<ISysAdminRepository, SysAdminRepository>();
+builder.Services.AddScoped<IReviewRepository,ReviewRepository>();
 
 builder.Services.AddDbContext<ApplicationContext>(options =>
     options.UseSqlite("Data Source=DB-PPS.db", b => b.MigrationsAssembly("Infrastructure")));
