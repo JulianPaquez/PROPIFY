@@ -45,7 +45,7 @@ public class PropertyController : ControllerBase
             return StatusCode(500, "La propiedad no ha podido ser creada, no existe el propietario");
         }
     }
-
+    
     [HttpPut("{id}")]
     public IActionResult Update([FromRoute] int id,[FromBody] PropertyUpdateRequest request) 
     {

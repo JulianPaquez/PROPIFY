@@ -1,4 +1,5 @@
 using domain.Entities;
+using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace infrastructure.Repositories
@@ -10,6 +11,7 @@ namespace infrastructure.Repositories
         public DbSet<SysAdmin> SysAdmins { get; set; }
         public DbSet<Addresses> Addresses { get; set; }
         public DbSet<Booking> Bookings { get; set; }
+        public DbSet<Image> Images { get; set; }
         
         public DbSet<Client> Clients { get; set; } 
         public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options)

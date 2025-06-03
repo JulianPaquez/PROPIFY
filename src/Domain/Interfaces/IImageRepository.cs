@@ -1,4 +1,4 @@
-﻿/*using domain.Interfaces;
+﻿using domain.Interfaces;
 using Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -8,8 +8,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Interfaces
 {
-    public  interface IImageRepository : IBaseRepository<Image>
+    public interface IImageRepository : IBaseRepository<Image>
     {
     }
 }
-*/

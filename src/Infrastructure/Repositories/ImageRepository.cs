@@ -1,4 +1,4 @@
-﻿/*using Domain.Entities;
+﻿using Domain.Entities;
 using Domain.Interfaces;
 using infrastructure.Repositories;
 using System;
@@ -9,13 +9,12 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories
 {
-    public class ImageRepository : BaseRepository<Image>, IImageRepository 
+    public class ImageRepository : BaseRepository<Image>, IImageRepository
     {
         private readonly ApplicationContext _context;
-        public ImageRepository(ApplicationContext context) : base(context) 
+        public ImageRepository(ApplicationContext context) : base(context)
         {
             _context = context;
         }
     }
 }
-*/

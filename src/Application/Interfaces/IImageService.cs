@@ -1,4 +1,5 @@
-﻿/*using Application.Models.Request;
+﻿using Application.Models;
+using Application.Models.Request;
 using domain.Entities;
 using Domain.Entities;
 using System;
@@ -11,9 +12,9 @@ namespace Application.Interfaces
 {
     public interface IImageService
     {
-        Task Update(int id);
-        Task Delete(Image image);
+        ImageDto GetById(int id);
+        void Create(ImageCreateRequest request);
+        void Delete(int id);
     }
 }
 
-*/

@@ -1,6 +1,8 @@
 using application.Interfaces;
+using Application.Interfaces;
 using Application.Services;
 using domain.Interfaces;
+using Domain.Interfaces;
 using infrastructure.Repositories;
 using Infrastructure.Repositories;
 using Microsoft.Data.Sqlite;
@@ -21,6 +23,7 @@ builder.Services.AddScoped<IPropertyService, PropertyService>();
 builder.Services.AddScoped<IOwnerService, OwnerService>();
 builder.Services.AddScoped<ISysAdminService, SysAdminService>();
 builder.Services.AddScoped<IBookingService, BookingService>();
+builder.Services.AddScoped<IImageService, ImageService>();
 
 // Repositories
 builder.Services.AddScoped<IBookingRepository, BookingRepository>();
@@ -28,6 +31,7 @@ builder.Services.AddScoped<IClientRepository, ClientRepository>();
 builder.Services.AddScoped<IPropertyRepository, PropertyRepository>();
 builder.Services.AddScoped<IOwnerRepository, OwnerRepository>();
 builder.Services.AddScoped<ISysAdminRepository, SysAdminRepository>();
+builder.Services.AddScoped<IImageRepository, ImageRepository>();
 
 builder.Services.AddDbContext<ApplicationContext>(options =>
     options.UseSqlite("Data Source=DB-PPS.db", b => b.MigrationsAssembly("Infrastructure")));
