@@ -15,16 +15,17 @@ namespace domain.Entities
 
         public Owner() { }
 
-        public Owner(string name, string surname, string email, string password, string numberphone, DocumentType documentType, string dni, int cvu) 
-        { 
+        public Owner(string name, string surname, string email, string password, string numberphone, DocumentType documentType, string dni, int cvu)
+        {
             Name = name;
             Surname = surname;
-            Email = email;  
+            Email = email;
             Password = password;
             NumberPhone = numberphone;
             DocumentType = documentType;
             Dni = dni;
             Cvu = cvu;
+            UserType = "owner";
         }
     }
 }

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 [Route("api/[controller]")]
@@ -13,6 +14,7 @@ public class OwnerController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Roles = "sysAdmin")]
 
     public ActionResult<List<OwnerDTO>> GetAll()
     {
@@ -20,6 +22,7 @@ public class OwnerController : ControllerBase
     }
 
     [HttpGet("{id}")]
+    [Authorize(Roles = "sysAdmin")]
     public ActionResult<OwnerDTO> GetById(int id)
     {
         try
@@ -34,12 +37,14 @@ public class OwnerController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "sysAdmin, owner")]
     public IActionResult Create([FromBody] OwnerCreateRquest request)
     {
         return Ok(_ownerService.Create(request));
     }
 
     [HttpPut("{id}")]
+    [Authorize(Roles = "sysAdmin, owner")]
     public IActionResult Update([FromRoute] int id, OwnerUpdateRequest request)
     {
         try
@@ -55,6 +60,7 @@ public class OwnerController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [Authorize(Roles = "sysAdmin, owner")]
     public IActionResult Delete(int id)
     {
         try
@@ -68,19 +74,20 @@ public class OwnerController : ControllerBase
             return StatusCode(500, "Propietario no encontrado");
         }
     }
-    
+
     [HttpPost("login")]
+    [Authorize(Roles = "sysAdmin, owner")]
 public ActionResult<OwnerDTO> Login([FromBody] LoginRequest request)
-{
-    var owner = _ownerService.GetAll().FirstOrDefault(o => o.Email == request.Email && o.Password == request.Password);
-
-    if (owner == null)
     {
-        return Unauthorized("Email o contraseña incorrectos.");
-    }
+        var owner = _ownerService.GetAll().FirstOrDefault(o => o.Email == request.Email && o.Password == request.Password);
 
-    return Ok(owner);
-}
+        if (owner == null)
+        {
+            return Unauthorized("Email o contraseña incorrectos.");
+        }
+
+        return Ok(owner);
+    }
 
 
 }

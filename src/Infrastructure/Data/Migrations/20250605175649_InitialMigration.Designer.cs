@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20250522000431_InitialMigration")]
+    [Migration("20250605175649_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -19,45 +19,47 @@ namespace Infrastructure.Data.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.4");
 
-            modelBuilder.Entity("domain.Entities.Owner", b =>
+            modelBuilder.Entity("domain.Entities.Addresses", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("Cvu")
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Country")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Decorated")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Floor")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Dni")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("DocumentType")
+                    b.Property<int>("IdProperty")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Email")
+                    b.Property<double>("Latitude")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("Length")
+                        .HasColumnType("REAL");
+
+                    b.Property<string>("Observations")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("NumberPhone")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Surname")
+                    b.Property<string>("Street")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Owner", (string)null);
+                    b.ToTable("Addresses");
                 });
 
             modelBuilder.Entity("domain.Entities.Property", b =>
@@ -67,6 +69,14 @@ namespace Infrastructure.Data.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Bathroom")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Country")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
@@ -87,6 +97,10 @@ namespace Infrastructure.Data.Migrations
                     b.Property<int>("PricePerNight")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("Province")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Room")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -101,6 +115,10 @@ namespace Infrastructure.Data.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Street")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Type")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -112,7 +130,7 @@ namespace Infrastructure.Data.Migrations
                     b.ToTable("Properties");
                 });
 
-            modelBuilder.Entity("domain.Entities.SysAdmin", b =>
+            modelBuilder.Entity("domain.Entities.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -145,9 +163,35 @@ namespace Infrastructure.Data.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("UserType")
+                        .IsRequired()
+                        .HasMaxLength(8)
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
-                    b.ToTable("SysAdmin", (string)null);
+                    b.ToTable("Users", (string)null);
+
+                    b.HasDiscriminator<string>("UserType").HasValue("User");
+
+                    b.UseTphMappingStrategy();
+                });
+
+            modelBuilder.Entity("domain.Entities.Owner", b =>
+                {
+                    b.HasBaseType("domain.Entities.User");
+
+                    b.Property<int>("Cvu")
+                        .HasColumnType("INTEGER");
+
+                    b.HasDiscriminator().HasValue("owner");
+                });
+
+            modelBuilder.Entity("domain.Entities.SysAdmin", b =>
+                {
+                    b.HasBaseType("domain.Entities.User");
+
+                    b.HasDiscriminator().HasValue("sysAdmin");
                 });
 
             modelBuilder.Entity("domain.Entities.Property", b =>

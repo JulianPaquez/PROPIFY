@@ -9,6 +9,7 @@ namespace Infrastructure.Repositories
         public DbSet<Owner> Owners { get; set; }
         public DbSet<SysAdmin> SysAdmins { get; set; }
         public DbSet<Addresses> Addresses { get; set; }
+        public DbSet<User> Users { get; set; }
 
         public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options)
         {
@@ -22,8 +23,11 @@ namespace Infrastructure.Repositories
         .HasForeignKey(p => p.OwnerId)
         .OnDelete(DeleteBehavior.Cascade);
 
-    modelBuilder.Entity<Owner>().ToTable("Owner");
-    modelBuilder.Entity<SysAdmin>().ToTable("SysAdmin");
+        modelBuilder.Entity<User>()
+            .ToTable("Users")
+            .HasDiscriminator<string>("UserType")
+            .HasValue<SysAdmin>("sysAdmin")
+            .HasValue<Owner>("owner");
 
     base.OnModelCreating(modelBuilder);
 }

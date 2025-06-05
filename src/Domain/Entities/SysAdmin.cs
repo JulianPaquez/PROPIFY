@@ -10,7 +10,8 @@ namespace domain.Entities
     {
         public SysAdmin() { }
 
-        public SysAdmin(string name, string surname, string email, string password, string numberphone, DocumentType documentType, string dni) {
+        public SysAdmin(string name, string surname, string email, string password, string numberphone, DocumentType documentType, string dni)
+        {
             Name = name;
             Surname = surname;
             Email = email;
@@ -18,6 +19,7 @@ namespace domain.Entities
             NumberPhone = numberphone;
             DocumentType = documentType;
             Dni = dni;
+            UserType = "sysAdmin";
         }
     }
 }

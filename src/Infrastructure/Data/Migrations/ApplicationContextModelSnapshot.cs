@@ -59,47 +59,6 @@ namespace Infrastructure.Data.Migrations
                     b.ToTable("Addresses");
                 });
 
-            modelBuilder.Entity("domain.Entities.Owner", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("Cvu")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Dni")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("DocumentType")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("NumberPhone")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Surname")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Owner", (string)null);
-                });
-
             modelBuilder.Entity("domain.Entities.Property", b =>
                 {
                     b.Property<int>("Id")
@@ -168,7 +127,7 @@ namespace Infrastructure.Data.Migrations
                     b.ToTable("Properties");
                 });
 
-            modelBuilder.Entity("domain.Entities.SysAdmin", b =>
+            modelBuilder.Entity("domain.Entities.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -201,9 +160,35 @@ namespace Infrastructure.Data.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("UserType")
+                        .IsRequired()
+                        .HasMaxLength(8)
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
-                    b.ToTable("SysAdmin", (string)null);
+                    b.ToTable("Users", (string)null);
+
+                    b.HasDiscriminator<string>("UserType").HasValue("User");
+
+                    b.UseTphMappingStrategy();
+                });
+
+            modelBuilder.Entity("domain.Entities.Owner", b =>
+                {
+                    b.HasBaseType("domain.Entities.User");
+
+                    b.Property<int>("Cvu")
+                        .HasColumnType("INTEGER");
+
+                    b.HasDiscriminator().HasValue("owner");
+                });
+
+            modelBuilder.Entity("domain.Entities.SysAdmin", b =>
+                {
+                    b.HasBaseType("domain.Entities.User");
+
+                    b.HasDiscriminator().HasValue("sysAdmin");
                 });
 
             modelBuilder.Entity("domain.Entities.Property", b =>

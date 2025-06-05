@@ -11,27 +11,28 @@ namespace Infrastructure.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Owner",
+                name: "Addresses",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Cvu = table.Column<int>(type: "INTEGER", nullable: false),
-                    Name = table.Column<string>(type: "TEXT", nullable: false),
-                    Surname = table.Column<string>(type: "TEXT", nullable: false),
-                    Email = table.Column<string>(type: "TEXT", nullable: false),
-                    Password = table.Column<string>(type: "TEXT", nullable: false),
-                    NumberPhone = table.Column<string>(type: "TEXT", nullable: false),
-                    DocumentType = table.Column<int>(type: "INTEGER", nullable: false),
-                    Dni = table.Column<string>(type: "TEXT", nullable: false)
+                    IdProperty = table.Column<int>(type: "INTEGER", nullable: false),
+                    Street = table.Column<string>(type: "TEXT", nullable: false),
+                    Country = table.Column<string>(type: "TEXT", nullable: false),
+                    City = table.Column<string>(type: "TEXT", nullable: false),
+                    Floor = table.Column<int>(type: "INTEGER", nullable: false),
+                    Decorated = table.Column<string>(type: "TEXT", nullable: false),
+                    Observations = table.Column<string>(type: "TEXT", nullable: false),
+                    Latitude = table.Column<double>(type: "REAL", nullable: false),
+                    Length = table.Column<double>(type: "REAL", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Owner", x => x.Id);
+                    table.PrimaryKey("PK_Addresses", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "SysAdmin",
+                name: "Users",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -42,11 +43,13 @@ namespace Infrastructure.Data.Migrations
                     Password = table.Column<string>(type: "TEXT", nullable: false),
                     NumberPhone = table.Column<string>(type: "TEXT", nullable: false),
                     DocumentType = table.Column<int>(type: "INTEGER", nullable: false),
-                    Dni = table.Column<string>(type: "TEXT", nullable: false)
+                    Dni = table.Column<string>(type: "TEXT", nullable: false),
+                    UserType = table.Column<string>(type: "TEXT", maxLength: 8, nullable: false),
+                    Cvu = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SysAdmin", x => x.Id);
+                    table.PrimaryKey("PK_Users", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -58,6 +61,10 @@ namespace Infrastructure.Data.Migrations
                     Type = table.Column<string>(type: "TEXT", nullable: false),
                     SquareMeters = table.Column<float>(type: "REAL", nullable: false),
                     PricePerNight = table.Column<int>(type: "INTEGER", nullable: false),
+                    Country = table.Column<string>(type: "TEXT", nullable: false),
+                    Province = table.Column<string>(type: "TEXT", nullable: false),
+                    City = table.Column<string>(type: "TEXT", nullable: false),
+                    Street = table.Column<string>(type: "TEXT", nullable: false),
                     OwnerId = table.Column<int>(type: "INTEGER", nullable: false),
                     MaxTenants = table.Column<int>(type: "INTEGER", nullable: false),
                     Description = table.Column<string>(type: "TEXT", nullable: false),
@@ -71,9 +78,9 @@ namespace Infrastructure.Data.Migrations
                 {
                     table.PrimaryKey("PK_Properties", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Properties_Owner_OwnerId",
+                        name: "FK_Properties_Users_OwnerId",
                         column: x => x.OwnerId,
-                        principalTable: "Owner",
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -88,13 +95,13 @@ namespace Infrastructure.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "Addresses");
+
+            migrationBuilder.DropTable(
                 name: "Properties");
 
             migrationBuilder.DropTable(
-                name: "SysAdmin");
-
-            migrationBuilder.DropTable(
-                name: "Owner");
+                name: "Users");
         }
     }
 }
