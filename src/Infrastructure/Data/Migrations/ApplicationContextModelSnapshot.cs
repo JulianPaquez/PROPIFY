@@ -16,90 +16,6 @@ namespace Infrastructure.Data.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.4");
 
-            modelBuilder.Entity("domain.Entities.Addresses", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("City")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Country")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Decorated")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("Floor")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("IdProperty")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<double>("Latitude")
-                        .HasColumnType("REAL");
-
-                    b.Property<double>("Length")
-                        .HasColumnType("REAL");
-
-                    b.Property<string>("Observations")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Street")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Addresses");
-                });
-
-            modelBuilder.Entity("domain.Entities.Owner", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("Cvu")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Dni")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("DocumentType")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("NumberPhone")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Surname")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Owner", (string)null);
-                });
-
             modelBuilder.Entity("domain.Entities.Property", b =>
                 {
                     b.Property<int>("Id")
@@ -168,7 +84,35 @@ namespace Infrastructure.Data.Migrations
                     b.ToTable("Properties");
                 });
 
-            modelBuilder.Entity("domain.Entities.SysAdmin", b =>
+            modelBuilder.Entity("domain.Entities.Review", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Clasification")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Comment")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("IdProp")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("IdUser")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IdProp");
+
+                    b.HasIndex("IdUser");
+
+                    b.ToTable("Reviews");
+                });
+
+            modelBuilder.Entity("domain.Entities.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -203,6 +147,25 @@ namespace Infrastructure.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.ToTable("User");
+
+                    b.UseTptMappingStrategy();
+                });
+
+            modelBuilder.Entity("domain.Entities.Owner", b =>
+                {
+                    b.HasBaseType("domain.Entities.User");
+
+                    b.Property<int>("Cvu")
+                        .HasColumnType("INTEGER");
+
+                    b.ToTable("Owner", (string)null);
+                });
+
+            modelBuilder.Entity("domain.Entities.SysAdmin", b =>
+                {
+                    b.HasBaseType("domain.Entities.User");
+
                     b.ToTable("SysAdmin", (string)null);
                 });
 
@@ -215,6 +178,43 @@ namespace Infrastructure.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Owner");
+                });
+
+            modelBuilder.Entity("domain.Entities.Review", b =>
+                {
+                    b.HasOne("domain.Entities.Property", "Property")
+                        .WithMany()
+                        .HasForeignKey("IdProp")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("domain.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("IdUser")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Property");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("domain.Entities.Owner", b =>
+                {
+                    b.HasOne("domain.Entities.User", null)
+                        .WithOne()
+                        .HasForeignKey("domain.Entities.Owner", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("domain.Entities.SysAdmin", b =>
+                {
+                    b.HasOne("domain.Entities.User", null)
+                        .WithOne()
+                        .HasForeignKey("domain.Entities.SysAdmin", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

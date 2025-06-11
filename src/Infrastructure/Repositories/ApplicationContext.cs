@@ -8,7 +8,6 @@ namespace Infrastructure.Repositories
         public DbSet<Property> Properties { get; set; }
         public DbSet<Owner> Owners { get; set; }
         public DbSet<SysAdmin> SysAdmins { get; set; }
-        public DbSet<Addresses> Addresses { get; set; }
         public DbSet<Review> Reviews { get; set; }
 
         public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options)
