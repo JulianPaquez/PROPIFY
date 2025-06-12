@@ -1,4 +1,5 @@
 
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,18 +16,20 @@ public class PropertyController : ControllerBase
 
     [HttpGet]
     [Authorize(Roles = "sysAdmin, owner")]
-    public ActionResult<List<PropertyDto>> GetAll()
+    public async Task<ActionResult> GetAll()
     {
-        return _propertyService.GetAll();
+        var prop = await _propertyService.GetAll();
+        return Ok(prop);
     }
 
     [HttpGet("{id}")]
     [Authorize(Roles = "sysAdmin, owner")]
-    public ActionResult<PropertyDto> GetById(int id)
+    public async Task<ActionResult<PropertyDto>> GetById(int id)
     {
         try
         {
-            return _propertyService.GetById(id);
+            var prop = await _propertyService.GetById(id);
+            return Ok(prop);
         }
         catch (System.Exception)
         {
@@ -36,12 +39,12 @@ public class PropertyController : ControllerBase
 
     [HttpPost]
     [Authorize(Roles = "sysAdmin, owner")]
-    public IActionResult Create([FromBody] PropertyCreateRequest request)
+    public async Task<IActionResult> Create([FromBody] PropertyCreateRequest request)
     {
         try
         {
-            _propertyService.Create(request);
-            return Ok();
+           var crearPropiedad= await _propertyService.Create(request);
+            return CreatedAtAction(nameof(GetById),new{ id = crearPropiedad.Id}, crearPropiedad );
 
         }
         catch (System.Exception)
@@ -52,12 +55,12 @@ public class PropertyController : ControllerBase
 
     [HttpPut("{id}")]
     [Authorize(Roles = "sysAdmin, owner")]
-    public IActionResult Update([FromRoute] int id, [FromBody] PropertyUpdateRequest request)
+    public async Task<IActionResult> Update([FromRoute] int id, [FromBody] PropertyUpdateRequest request)
     {
         try
         {
-            _propertyService.Update(id, request);
-            return Ok();
+            var propiedadAct = await _propertyService.Update(id, request);
+            return Ok(propiedadAct);
         }
         catch (System.Exception)
         {
@@ -68,12 +71,12 @@ public class PropertyController : ControllerBase
 
     [HttpDelete("{id}")]
     [Authorize(Roles = "sysAdmin, owner")]
-    public IActionResult Delete([FromRoute] int id)
+    public async Task<IActionResult> Delete([FromRoute] int id)
     {
         try
         {
-            _propertyService.Delete(id);
-            return Ok();
+            await _propertyService.Delete(id);
+            return Ok("Propiedad eliminada correctamente");
         }
         catch (System.Exception)
         {

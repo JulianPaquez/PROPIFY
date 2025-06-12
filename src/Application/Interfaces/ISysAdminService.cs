@@ -2,9 +2,9 @@ using domain.Entities;
 
 public interface ISysAdminService
 {
-    List<SysAdminDto> GetAll();
-    SysAdminDto GetById(int id);
-    SysAdmin Create(SysAdminCreateRequest request);
-    void Update(int id, SysAdminUpdateRequest request);
-    void Delete(int id);
+    Task<IEnumerable<SysAdminDto>> GetAll();
+    Task<SysAdminDto> GetById(int id);
+   Task<SysAdmin>Create(SysAdminCreateRequest request);
+    Task<SysAdmin> Update(int id, SysAdminUpdateRequest request);
+    Task Delete(int id);
 }

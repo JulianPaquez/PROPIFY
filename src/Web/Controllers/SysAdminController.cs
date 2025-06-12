@@ -13,17 +13,19 @@ public class SysAdminController : ControllerBase
 
     [HttpGet]
 
-    public ActionResult<List<SysAdminDto>> GetAll()
+    public async Task<ActionResult<List<SysAdminDto>>> GetAll()
     {
-        return _sysAdminService.GetAll();
+        var sysAdmin = await _sysAdminService.GetAll();
+        return Ok(sysAdmin);
     }
 
     [HttpGet("{id}")]
-    public ActionResult<SysAdminDto> GetById(int id)
+    public async Task<ActionResult<SysAdminDto>> GetById(int id)
     {
         try
         {
-            return _sysAdminService.GetById(id);
+            var sysAdmin = await _sysAdminService.GetById(id);
+            return Ok(sysAdmin);
         }
         catch (System.Exception)
         {
@@ -34,18 +36,19 @@ public class SysAdminController : ControllerBase
 
     [HttpPost]
 
-    public IActionResult Create([FromBody] SysAdminCreateRequest request)
+    public async Task<IActionResult> Create([FromBody] SysAdminCreateRequest request)
     {
-         return Ok(_sysAdminService.Create(request));
+        var newSysAdmin = await _sysAdminService.Create(request);
+        return Ok(newSysAdmin);
     }
 
     [HttpPut("{id}")]
 
-    public IActionResult Update(int id, [FromBody] SysAdminUpdateRequest request)
+    public async Task<IActionResult> Update(int id, [FromBody] SysAdminUpdateRequest request)
     {
         try
         {
-            _sysAdminService.Update(id, request);
+            await _sysAdminService.Update(id, request);
             return StatusCode(200, "Se actualizó correctamente");
         }
         catch (System.Exception)
@@ -56,11 +59,11 @@ public class SysAdminController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    public IActionResult Delete(int id)
+    public async Task<IActionResult> Delete(int id)
     {
         try
         {
-            _sysAdminService.Delete(id);
+            await _sysAdminService.Delete(id);
             return Ok();
         }
         catch (System.Exception)
