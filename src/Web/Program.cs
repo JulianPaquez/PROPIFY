@@ -1,7 +1,9 @@
 using System.Reflection;
 using System.Text;
 using Application.Interfaces;
+using domain.Interfaces;
 using Domain.Interfaces;
+using infrastructure.Repositories;
 using Infrastructure.Repositories;
 using Infrastructure.Services;
 using Microsoft.Data.Sqlite;
@@ -49,6 +51,7 @@ builder.Services.AddSwaggerGen(setupAction =>
 });
 
 // Services
+builder.Services.AddScoped<IReviewService, ReviewService>();
 builder.Services.AddScoped<IPropertyService, PropertyService>();
 builder.Services.AddScoped<IOwnerService, OwnerService>();
 builder.Services.AddScoped<ISysAdminService, SysAdminService>();
@@ -60,6 +63,7 @@ builder.Services.Configure<AuthenticationServiceOptions>(
 );
 
 // Repositories
+builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
 builder.Services.AddScoped<IPropertyRepository, PropertyRepository>();
 builder.Services.AddScoped<IOwnerRepository, OwnerRepository>();
 builder.Services.AddScoped<ISysAdminRepository, SysAdminRepository>();

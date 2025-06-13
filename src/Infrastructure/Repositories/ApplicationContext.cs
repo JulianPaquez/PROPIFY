@@ -6,6 +6,7 @@ namespace Infrastructure.Repositories
     public class ApplicationContext : DbContext
     {
         public DbSet<Property> Properties { get; set; }
+        public DbSet<Review> Reviews { get; set; }
         public DbSet<Owner> Owners { get; set; }
         public DbSet<SysAdmin> SysAdmins { get; set; }
         public DbSet<Addresses> Addresses { get; set; }
@@ -30,6 +31,8 @@ namespace Infrastructure.Repositories
             .HasDiscriminator<string>("UserType")
             .HasValue<SysAdmin>("sysAdmin")
             .HasValue<Owner>("owner");
+            
+        modelBuilder.Entity<Review>().ToTable("Reviews");
 
     base.OnModelCreating(modelBuilder);
 }
