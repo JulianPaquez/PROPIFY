@@ -13,6 +13,8 @@ namespace Infrastructure.Repositories
         public DbSet<User> Users { get; set; }
         public DbSet<Payments> Payments { get; set; }
         public DbSet<Taxes> Taxes { get; set; }
+        public DbSet<Client> Clients { get; set; }
+        public DbSet<Booking> Bookings{ get; set; }
 
         public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options)
         {

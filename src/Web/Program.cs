@@ -1,6 +1,7 @@
 using System.Reflection;
 using System.Text;
 using Application.Interfaces;
+using Application.Services;
 using domain.Interfaces;
 using Domain.Interfaces;
 using infrastructure.Repositories;
@@ -58,6 +59,8 @@ builder.Services.AddScoped<ISysAdminService, SysAdminService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IPaymentsService, PaymentsService>();
 builder.Services.AddScoped<ITaxesService, TaxesService>();
+builder.Services.AddScoped<IClientService, ClientService>();
+builder.Services.AddScoped<IBookingService, BookingService>();
 builder.Services.Configure<AuthenticationServiceOptions>(
     builder.Configuration.GetSection(AuthenticationServiceOptions.AuthenticationService)
 );
@@ -70,6 +73,8 @@ builder.Services.AddScoped<ISysAdminRepository, SysAdminRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IPaymentsRepository, PaymentsRepository>();
 builder.Services.AddScoped<ITaxesRepository, TaxesRepository>();
+builder.Services.AddScoped<IClientRepository, ClientRepository>();
+builder.Services.AddScoped<IBookingRepository, BookingRepository>();
 
 builder.Services.AddDbContext<ApplicationContext>(options =>
     options.UseSqlite("Data Source=DB-PPS.db", b => b.MigrationsAssembly("Infrastructure")));

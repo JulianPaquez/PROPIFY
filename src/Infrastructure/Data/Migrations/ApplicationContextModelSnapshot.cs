@@ -134,6 +134,34 @@ namespace Infrastructure.Data.Migrations
                     b.ToTable("Addresses");
                 });
 
+            modelBuilder.Entity("domain.Entities.Booking", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateOnly>("CheckInDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateOnly>("ChekOutDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("ClientNameId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("PropertyId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("State")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClientNameId");
+
+                    b.ToTable("Bookings");
+                });
+
             modelBuilder.Entity("domain.Entities.Property", b =>
                 {
                     b.Property<int>("Id")
@@ -202,6 +230,34 @@ namespace Infrastructure.Data.Migrations
                     b.ToTable("Properties");
                 });
 
+            modelBuilder.Entity("domain.Entities.Review", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Clasification")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Comment")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("IdProp")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("IdUser")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IdProp");
+
+                    b.HasIndex("IdUser");
+
+                    b.ToTable("Reviews", (string)null);
+                });
+
             modelBuilder.Entity("domain.Entities.User", b =>
                 {
                     b.Property<int>("Id")
@@ -249,6 +305,13 @@ namespace Infrastructure.Data.Migrations
                     b.UseTphMappingStrategy();
                 });
 
+            modelBuilder.Entity("domain.Entities.Client", b =>
+                {
+                    b.HasBaseType("domain.Entities.User");
+
+                    b.HasDiscriminator().HasValue("Client");
+                });
+
             modelBuilder.Entity("domain.Entities.Owner", b =>
                 {
                     b.HasBaseType("domain.Entities.User");
@@ -293,6 +356,17 @@ namespace Infrastructure.Data.Migrations
                     b.Navigation("ReceivedByUser");
                 });
 
+            modelBuilder.Entity("domain.Entities.Booking", b =>
+                {
+                    b.HasOne("domain.Entities.User", "ClientName")
+                        .WithMany()
+                        .HasForeignKey("ClientNameId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ClientName");
+                });
+
             modelBuilder.Entity("domain.Entities.Property", b =>
                 {
                     b.HasOne("domain.Entities.Owner", "Owner")
@@ -302,6 +376,25 @@ namespace Infrastructure.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Owner");
+                });
+
+            modelBuilder.Entity("domain.Entities.Review", b =>
+                {
+                    b.HasOne("domain.Entities.Property", "Property")
+                        .WithMany()
+                        .HasForeignKey("IdProp")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("domain.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("IdUser")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Property");
+
+                    b.Navigation("User");
                 });
 #pragma warning restore 612, 618
         }

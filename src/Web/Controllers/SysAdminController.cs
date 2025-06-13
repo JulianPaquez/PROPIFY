@@ -69,7 +69,7 @@ public class SysAdminController : ControllerBase
         catch (System.Exception)
         {
 
-             return StatusCode(500, " No se encontro al sysadmin con ese id");;
+             return StatusCode(500, " No se encontro al sysadmin con ese id");
         }
     }
 
