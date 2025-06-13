@@ -2,9 +2,9 @@ using domain.Entities;
 
 public interface IOwnerService
 {
-    List<OwnerDTO> GetAll();
-    OwnerDTO GetById(int id);
-    Owner Create(OwnerCreateRquest request);
-    void Update(int id, OwnerUpdateRequest request);
-    void Delete(int id);
+    Task<Owner> Create(OwnerCreateRquest request);
+    Task<Owner> Update(int id, OwnerUpdateRequest request);
+    Task<OwnerDTO> GetById(int id);
+    Task<IEnumerable<OwnerDTO>> GetAll();
+    Task Delete(int id);
 }

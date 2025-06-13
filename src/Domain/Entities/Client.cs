@@ -18,6 +18,7 @@ namespace domain.Entities
             NumberPhone = numberphone;
             DocumentType = documentType;
             Dni = dni;
+            UserType = "cliente";
         }
     }
 

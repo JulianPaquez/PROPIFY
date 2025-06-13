@@ -1,4 +1,6 @@
+using System.Threading.Tasks;
 using domain.Entities;
+using Domain.Exceptions;
 
 public class SysAdminService : ISysAdminService
 {
@@ -8,42 +10,34 @@ public class SysAdminService : ISysAdminService
         _sysAdminRepository = sysAdminRepository;
     }
 
-    public List<SysAdminDto> GetAll()
+    public async Task<IEnumerable<SysAdminDto>> GetAll()
     {
-        var list = _sysAdminRepository.GetAll();
+        var list = await _sysAdminRepository.GetAllAsync();
         return SysAdminDto.CreateList(list);
     }
 
-    public SysAdminDto GetById(int id)
+    public async Task<SysAdminDto> GetById(int id)
     {
-        var sysAdmin = _sysAdminRepository.GetById(id);
+        var sysAdmin = await _sysAdminRepository.GetByIdAsync(id);
         if (sysAdmin == null)
         {
-            throw new Exception("SysAdmin no encontrado");
+            throw new NotFoundException("SysAdmin no encontrado.");
         }
-        return new SysAdminDto
-        {
-            Id = sysAdmin.Id,
-            Name = sysAdmin.Name,
-            Surname = sysAdmin.Surname,
-            Email = sysAdmin.Email,
-            Password = sysAdmin.Password,
-            NumberPhone = sysAdmin.NumberPhone,
-            DocumentType = sysAdmin.DocumentType,
-            Dni = sysAdmin.Dni,
-        };
+        return SysAdminDto.Create(sysAdmin);
     }
 
-    public SysAdmin Create(SysAdminCreateRequest request)
+    public async Task<SysAdmin>Create(SysAdminCreateRequest request)
     {
         var newSysAdmin = new SysAdmin(request.Name, request.Surname, request.Email, request.Password, request.NumberPhone, request.DocumentType, request.Dni);
-        _sysAdminRepository.Create(newSysAdmin);
+        await _sysAdminRepository.CreateAsync(newSysAdmin);
         return newSysAdmin;
     }
 
-    public void Update(int id, SysAdminUpdateRequest request)
+    public async Task<SysAdmin> Update(int id, SysAdminUpdateRequest request)
     {
-        var sysAdmin = _sysAdminRepository.GetById(id);
+       
+        var sysAdmin = await _sysAdminRepository.GetByIdAsync(id); 
+
         if (sysAdmin == null)
         {
             throw new Exception("SysAdmin no encontrado");
@@ -56,17 +50,20 @@ public class SysAdminService : ISysAdminService
         sysAdmin.NumberPhone = request.NumberPhone;
         sysAdmin.DocumentType = request.DocumentType;
         sysAdmin.Dni = request.Dni;
-        _sysAdminRepository.Update(sysAdmin);
+
+        await _sysAdminRepository.UpdateAsync(sysAdmin); 
+
+        return sysAdmin; 
     }
     
-    public void Delete(int id)
+    public async Task Delete(int id)
     {
-      var sysAdmin = _sysAdminRepository.GetById(id);
+      var sysAdmin = await _sysAdminRepository.GetByIdAsync(id);
         if (sysAdmin == null)
         {
 
             throw new Exception("Admin no encontrado");
         }
-        _sysAdminRepository.Delete(sysAdmin);
+        await _sysAdminRepository.DeleteAsync(sysAdmin);
     }
 }

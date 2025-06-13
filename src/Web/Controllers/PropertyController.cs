@@ -1,4 +1,6 @@
 
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
@@ -13,61 +15,68 @@ public class PropertyController : ControllerBase
     }
 
     [HttpGet]
-    public ActionResult<List<PropertyDto>> GetAll()
+    [Authorize(Roles = "sysAdmin, owner")]
+    public async Task<ActionResult> GetAll()
     {
-        return _propertyService.GetAll();
+        var prop = await _propertyService.GetAll();
+        return Ok(prop);
     }
 
     [HttpGet("{id}")]
-    public ActionResult<PropertyDto> GetById(int id) 
+    [Authorize(Roles = "sysAdmin, owner")]
+    public async Task<ActionResult<PropertyDto>> GetById(int id)
     {
         try
         {
-            return _propertyService.GetById(id);
+            var prop = await _propertyService.GetById(id);
+            return Ok(prop);
         }
-        catch (System.Exception ) 
+        catch (System.Exception)
         {
             return StatusCode(500, "Propiedad no encontrada");
         }
     }
 
     [HttpPost]
-    public IActionResult Create([FromBody] PropertyCreateRequest request)
+    [Authorize(Roles = "sysAdmin, owner")]
+    public async Task<IActionResult> Create([FromBody] PropertyCreateRequest request)
     {
         try
         {
-             _propertyService.Create(request);
-            return Ok();
+           var crearPropiedad= await _propertyService.Create(request);
+            return CreatedAtAction(nameof(GetById),new{ id = crearPropiedad.Id}, crearPropiedad );
 
         }
-        catch (System.Exception )
+        catch (System.Exception)
         {
             return StatusCode(500, "La propiedad no ha podido ser creada, no existe el propietario");
         }
     }
 
     [HttpPut("{id}")]
-    public IActionResult Update([FromRoute] int id,[FromBody] PropertyUpdateRequest request) 
+    [Authorize(Roles = "sysAdmin, owner")]
+    public async Task<IActionResult> Update([FromRoute] int id, [FromBody] PropertyUpdateRequest request)
     {
         try
         {
-            _propertyService.Update(id, request);
-            return Ok();
+            var propiedadAct = await _propertyService.Update(id, request);
+            return Ok(propiedadAct);
         }
-        catch(System.Exception )
+        catch (System.Exception)
         {
             return StatusCode(500, "La propiedad no ha podido ser actualizada");
         }
-       
+
     }
 
     [HttpDelete("{id}")]
-    public IActionResult Delete([FromRoute]int id) 
+    [Authorize(Roles = "sysAdmin, owner")]
+    public async Task<IActionResult> Delete([FromRoute] int id)
     {
         try
         {
-            _propertyService.Delete(id);
-            return Ok();
+            await _propertyService.Delete(id);
+            return Ok("Propiedad eliminada correctamente");
         }
         catch (System.Exception)
         {

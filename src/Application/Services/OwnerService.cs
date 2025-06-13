@@ -1,4 +1,5 @@
 using domain.Entities;
+using Domain.Exceptions;
 
 public class OwnerService : IOwnerService
 {
@@ -9,17 +10,17 @@ public class OwnerService : IOwnerService
         _ownerRepository = ownerRepository;
     }
 
-    public Owner Create(OwnerCreateRquest request)
+    public async Task<Owner>Create(OwnerCreateRquest request)
     {
         var newOwner = new Owner(request.Name, request.Surname, request.Email, request.Password, request.NumberPhone, request.DocumentType, request.Dni, request.Cvu);
-        _ownerRepository.Create(newOwner);
+        await _ownerRepository.CreateAsync(newOwner);
         return newOwner;
     }
 
 
-    public void Update(int id, OwnerUpdateRequest request)
+    public async Task<Owner> Update(int id, OwnerUpdateRequest request)
     {
-        var owner = _ownerRepository.GetById(id);
+        var owner = await _ownerRepository.GetByIdAsync(id);
         if (owner == null)
         {
             throw new Exception("Propietario no encontrado");
@@ -32,46 +33,36 @@ public class OwnerService : IOwnerService
         owner.NumberPhone = request.NumberPhone;
         owner.Cvu = request.Cvu;
 
-        _ownerRepository.Update(owner);
+        await _ownerRepository.UpdateAsync(owner);
+        return owner;
     }
 
-    public OwnerDTO GetById(int id)
+    public async Task<OwnerDTO> GetById(int id)
     {
-        var owner = _ownerRepository.GetById(id);
+         var owner = await _ownerRepository.GetByIdAsync(id);
         if (owner == null)
         {
-            throw new Exception("Propietario no encontrado");
+            throw new NotFoundException("Propietario no encontrado.");
         }
 
-        return new OwnerDTO
-        {
-            Id = owner.Id,
-            Name = owner.Name,
-            Surname = owner.Surname,
-            Email = owner.Email,
-            Password = owner.Password,
-            NumberPhone = owner.NumberPhone,
-            DocumentType = owner.DocumentType,
-            Dni = owner.Dni,
-            Cvu = owner.Cvu,
-        };
+        return OwnerDTO.Create(owner);
     }
 
-    public List<OwnerDTO> GetAll()
+    public async Task<IEnumerable<OwnerDTO>> GetAll()
     {
-        var list = _ownerRepository.GetAll();
+        var list = await _ownerRepository.GetAllAsync();
         return OwnerDTO.CreateList(list);
     }
 
-    public void Delete(int id)
+    public async Task Delete(int id)
     {
-        var owner = _ownerRepository.GetById(id);
+        var owner = await _ownerRepository.GetByIdAsync(id);
         if (owner == null)
         {
             throw new Exception("Propietario no encontrado");
         }
 
-        _ownerRepository.Delete(owner);
+        await _ownerRepository.DeleteAsync(owner);
     }
 
 }

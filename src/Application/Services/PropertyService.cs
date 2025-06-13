@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using domain.Entities;
 
 public class PropertyService : IPropertyService
@@ -11,15 +12,15 @@ public class PropertyService : IPropertyService
         _ownerRepository = ownerRepository;
     }
 
-    public List<PropertyDto> GetAll()
+    public  async Task<IEnumerable<PropertyDto>> GetAll()
     {
-        var list = _repository.GetAll();
+        var list = await _repository.GetAllAsync();
         return PropertyDto.CreateList(list);
     }
 
-    public PropertyDto GetById(int id) 
+    public async Task<PropertyDto> GetById(int id) 
     {
-        var list = _repository.GetById(id);
+        var list = await _repository.GetByIdAsync(id);
 
         if(list == null) 
         {
@@ -30,38 +31,39 @@ public class PropertyService : IPropertyService
         
     }
 
-    public void Create(PropertyCreateRequest request)
+    public async Task<Property> Create(PropertyCreateRequest request)
     {
-        
-    var owner = _ownerRepository.GetByEmail(request.OwnerEmail);
-    if (owner == null)
-        throw new Exception("El owner con ese email no existe.");
 
-    var newProperty = new Property(
-        request.Type,
-        request.SquareMeters,
-        request.PricePerNight,
-        request.Country,
-        request.Province,
-        request.City,
-        request.Street,
-        owner.Id,
-        owner,
-        request.MaxTenants,
-        request.Description,
-        request.StateProperty,
-        request.Bathroom,
-        request.Room,
-        request.StreammingPlatform,
-        request.Pool
-    );
+        var owner = await _ownerRepository.GetByEmail(request.OwnerEmail);
+        if (owner == null)
+            throw new Exception("El owner con ese email no existe.");
 
-    _repository.Create(newProperty);
+        var newProperty = new Property(
+            request.Type,
+            request.SquareMeters,
+            request.PricePerNight,
+            request.Country,
+            request.Province,
+            request.City,
+            request.Street,
+            owner.Id,
+            owner,
+            request.MaxTenants,
+            request.Description,
+            request.StateProperty,
+            request.Bathroom,
+            request.Room,
+            request.StreammingPlatform,
+            request.Pool
+        );
+
+        await _repository.CreateAsync(newProperty);
+        return newProperty;
     }
 
-    public void Update(int id, PropertyUpdateRequest request)
+    public async Task<Property> Update(int id, PropertyUpdateRequest request)
     {
-        var property = _repository.GetById(id);
+        var property = await _repository.GetByIdAsync(id);
         if (property == null)
         {
             throw new Exception("El owner con ese email no existe.");
@@ -81,18 +83,19 @@ public class PropertyService : IPropertyService
         property.StreammingPlatform = request.StreammingPlatform;
         property.Pool = request.Pool;
 
-        _repository.Update(property);
+        await _repository.UpdateAsync(property);
+        return property;
 
        
     }
 
-    public void Delete(int id)
+    public async Task Delete(int id)
     {
-        var property = _repository.GetById(id);
+        var property = await _repository.GetByIdAsync(id);
         if (property == null)
         {
             throw new Exception("Propiedad no encontrada");
         }
-        _repository.Delete(property);
+        await _repository.DeleteAsync(property);
     }
 }

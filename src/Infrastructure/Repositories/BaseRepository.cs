@@ -17,42 +17,35 @@ namespace infrastructure.Repositories
             _context = context;
         }
 
-        public List<T> GetAll()
-        {
+        public async Task<List<T>> GetAllAsync()
+    {
+        return await _context.Set<T>().ToListAsync();
+    }
 
-            return _context.Set<T>().ToList();
-        }
+        public async Task<T?> GetByIdAsync<TId>(TId id)
+    {
+        return await _context.Set<T>().FindAsync(id);
+    }
 
-        public T? GetById<TId>(TId id)
-        {
+        public async Task DeleteAsync(T entity)
+    {
+        _context.Set<T>().Remove(entity);
+        await _context.SaveChangesAsync();
+    }
 
-            return _context.Set<T>().Find(new object[] { id });
-        }
-
-        public void Delete(T entity)
-        {
-            _context.Set<T>().Remove(entity);
-            _context.SaveChanges();
-
-
-        }
-
-        public T Update(T entity)
-        {
-            _context.Set<T>().Update(entity);
-            _context.SaveChanges();
-            return entity;
-
-        }
-
-        public T Create(T entity)
-        {
-
-            _context.Set<T>().Add(entity);
-            _context.SaveChanges();
-            return entity;
+        public async Task<T> UpdateAsync(T entity)
+    {
+        _context.Set<T>().Update(entity);
+        await _context.SaveChangesAsync();
+        return entity;
+    }
 
 
-        }
+        public async Task<T> CreateAsync(T entity)
+    {
+        await _context.Set<T>().AddAsync(entity);
+        await _context.SaveChangesAsync();
+        return entity;
+    }
     }
 }

@@ -1,3 +1,5 @@
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 [Route("api/[controller]")]
@@ -13,18 +15,22 @@ public class OwnerController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Roles = "sysAdmin")]
 
-    public ActionResult<List<OwnerDTO>> GetAll()
+    public async Task<ActionResult<List<OwnerDTO>>> GetAll()
     {
-        return _ownerService.GetAll();
+        var owner = await _ownerService.GetAll();
+        return Ok(owner);
     }
 
     [HttpGet("{id}")]
-    public ActionResult<OwnerDTO> GetById(int id)
+    [Authorize(Roles = "sysAdmin")]
+    public async Task<ActionResult<OwnerDTO>> GetById(int id)
     {
         try
         {
-            return _ownerService.GetById(id);
+            var owner = await _ownerService.GetById(id);
+            return Ok(owner);
         }
         catch (System.Exception)
         {
@@ -34,17 +40,20 @@ public class OwnerController : ControllerBase
     }
 
     [HttpPost]
-    public IActionResult Create([FromBody] OwnerCreateRquest request)
+    [Authorize(Roles = "sysAdmin, owner")]
+    public async Task<IActionResult> Create([FromBody] OwnerCreateRquest request)
     {
-        return Ok(_ownerService.Create(request));
+        var newOwner = await _ownerService.Create(request);
+        return Ok(newOwner);
     }
 
     [HttpPut("{id}")]
-    public IActionResult Update([FromRoute] int id, OwnerUpdateRequest request)
+    [Authorize(Roles = "sysAdmin, owner")]
+    public async Task<IActionResult> Update([FromRoute] int id, OwnerUpdateRequest request)
     {
         try
         {
-            _ownerService.Update(id, request);
+            await _ownerService.Update(id, request);
             return Ok();
         }
         catch (System.Exception)
@@ -55,11 +64,12 @@ public class OwnerController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    public IActionResult Delete(int id)
+    [Authorize(Roles = "sysAdmin, owner")]
+    public async Task<IActionResult> Delete(int id)
     {
         try
         {
-            _ownerService.Delete(id);
+            await _ownerService.Delete(id);
             return Ok();
         }
         catch (System.Exception)
@@ -68,19 +78,21 @@ public class OwnerController : ControllerBase
             return StatusCode(500, "Propietario no encontrado");
         }
     }
-    
+
     [HttpPost("login")]
-public ActionResult<OwnerDTO> Login([FromBody] LoginRequest request)
-{
-    var owner = _ownerService.GetAll().FirstOrDefault(o => o.Email == request.Email && o.Password == request.Password);
-
-    if (owner == null)
+    [Authorize(Roles = "sysAdmin, owner")]
+public async Task<ActionResult<OwnerDTO>> Login([FromBody] LoginRequest request)
     {
-        return Unauthorized("Email o contraseña incorrectos.");
-    }
+        var owners = await _ownerService.GetAll();
+        var owner = owners.FirstOrDefault(o => o.Email == request.Email && o.Password == request.Password);
 
-    return Ok(owner);
-}
+        if (owner == null)
+        {
+            return Unauthorized("Email o contraseña incorrectos.");
+        }
+
+        return Ok(owner);
+    }
 
 
 }

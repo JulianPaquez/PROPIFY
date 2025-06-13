@@ -9,7 +9,7 @@ public class OwnerRepository : BaseRepository<Owner>, IOwnerRepository
     {
     }
 
-    public Owner GetByEmail(string email)
+    public async Task<Owner> GetByEmail(string email)
 {
     return _context.Owners.FirstOrDefault(o => o.Email == email);
 }

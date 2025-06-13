@@ -10,14 +10,18 @@ public class PropertyRepository : BaseRepository<Property>, IPropertyRepository
     {
     }
 
-    public List<Property> GetAll()
-    {
-        return _context.Properties.Include(p => p.Owner).ToList();
-    }
+    public async Task<List<Property>> GetAllAsync()
+{
+    return await _context.Properties
+        .Include(p => p.Owner)
+        .ToListAsync();
+}
 
-    public Property GetById(int id)
-    {
-         return _context.Properties.Include(p => p.Owner).FirstOrDefault(p => p.Id == id);
-    }
+public async Task<Property> GetByIdAsync(int id)
+{
+    return await _context.Properties
+        .Include(p => p.Owner)
+        .FirstOrDefaultAsync(p => p.Id == id);
+}
     
 }

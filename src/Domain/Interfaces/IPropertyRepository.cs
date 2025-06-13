@@ -3,6 +3,6 @@ using domain.Interfaces;
 
 public interface IPropertyRepository : IBaseRepository<Property>
 {
-    List<Property> GetAll();
-    Property GetById(int id);
+    Task<List<Property>> GetAllAsync();
+    Task<Property> GetByIdAsync(int id);
 }

@@ -3,5 +3,5 @@ using domain.Interfaces;
 
 public interface IOwnerRepository : IBaseRepository<Owner>
 {
-    Owner GetByEmail(string email);
+    Task<Owner> GetByEmail(string email);
 }

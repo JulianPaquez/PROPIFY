@@ -8,11 +8,11 @@ namespace domain.Interfaces
 {
     public interface IBaseRepository<T> where T : class
     {
-        List<T> GetAll();
-        T? GetById<TId>(TId id);
-        void Delete(T entity);
-        T Update(T entity);
-        T Create(T entity);
+         Task<List<T>> GetAllAsync();
+        Task<T?> GetByIdAsync<TId>(TId id);
+        Task DeleteAsync(T entity);
+        Task<T> UpdateAsync(T entity);
+        Task<T> CreateAsync(T entity);
 
     }
 }
