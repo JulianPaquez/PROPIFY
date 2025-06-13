@@ -29,9 +29,9 @@ public class AuthenticateController : ControllerBase
         /// Devuelve un token JWT
         /// </remarks>
         [HttpPost("authenticate")]
-        public ActionResult<string> Authenticate(CredentialsForAuthenticateDto credentials)
+        public async Task<ActionResult<string>>  Authenticate(CredentialsForAuthenticateDto credentials)
         {
-            string token = _authService.Authenticate(credentials);
+            string token = await _authService.Authenticate(credentials);
             return Ok(token);
         }
 }

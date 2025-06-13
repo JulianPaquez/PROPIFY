@@ -20,14 +20,14 @@ namespace Infrastructure.Services
             _options = options.Value;
         }
 
-        private User? ValidateUser(CredentialsForAuthenticateDto request)
+        private async Task<User?> ValidateUser(CredentialsForAuthenticateDto request)
         {
             if (string.IsNullOrEmpty(request.Email) || string.IsNullOrEmpty(request.Password))
             {
                 return null;
             }
 
-            var user = _userRepository.GetByEmail(request.Email);
+            var user = await _userRepository.GetByEmail(request.Email);
 
             if (user == null)
             {
@@ -43,9 +43,9 @@ namespace Infrastructure.Services
             return null;
         }
 
-        public string Authenticate(CredentialsForAuthenticateDto request)
+        public async Task<string> Authenticate(CredentialsForAuthenticateDto request)
         {
-            var user = ValidateUser(request);
+            var user = await ValidateUser(request);
 
             if (user == null)
             {
