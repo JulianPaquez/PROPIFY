@@ -40,7 +40,7 @@ public class OwnerController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize(Roles = "sysAdmin, owner")]
+    [AllowAnonymous]
     public async Task<IActionResult> Create([FromBody] OwnerCreateRquest request)
     {
         var newOwner = await _ownerService.Create(request);
