@@ -29,10 +29,26 @@ namespace Application.Models
 
 
         }
-        
+
         public static List<ClientDTO> CreateList(IEnumerable<Client> client)
-    {
-        return client.Select(c => Create(c)).ToList();
-    }
+        {
+            if (client == null || !client.Any())
+            {
+                return null;
+            }
+
+            return client.Select(c => new ClientDTO
+            {
+                Id = c.Id,
+                Name = c.Name,
+                Surname = c.Surname,
+                Email = c.Email,
+                Password = c.Password,
+                NumberPhone = c.NumberPhone,
+                DocumentType = c.DocumentType,
+                Dni = c.Dni,
+            }).ToList();
+        
+        }
     }
 }

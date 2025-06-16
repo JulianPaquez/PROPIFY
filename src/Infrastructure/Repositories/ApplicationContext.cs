@@ -32,7 +32,8 @@ namespace Infrastructure.Repositories
             .ToTable("Users")
             .HasDiscriminator<string>("UserType")
             .HasValue<SysAdmin>("sysAdmin")
-            .HasValue<Owner>("owner");
+            .HasValue<Owner>("owner")
+            .HasValue<Client>("client");
             
         modelBuilder.Entity<Review>().ToTable("Reviews");
 

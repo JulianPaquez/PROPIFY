@@ -29,10 +29,10 @@ public class BookingController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] BookingCreateRquest rquest)
+    public async Task<IActionResult> Create([FromBody] BookingCreateRquest rEquest)
     {
-        var newBooking = await _bookingService.AddBooking(rquest);
-        return CreatedAtAction(nameof(GetById), new { id = newBooking.Id }, newBooking);
+        var newBooking = await _bookingService.AddBooking(rEquest);
+        return Ok(newBooking);
 
     }
 

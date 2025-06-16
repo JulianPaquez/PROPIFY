@@ -6,7 +6,7 @@ namespace Application.Models
     {
         public int Id { get; set; }
         public int PropertyId { get; set; }
-        public string ClientName { get; set; }
+        public string ClientName { get; set; } = null!;
         public DateOnly CheckInDate { get; set; }
         public DateOnly ChekOutDate { get; set; }
 
@@ -18,7 +18,7 @@ namespace Application.Models
             {
                 Id = booking.Id,
                 PropertyId = booking.PropertyId,
-                ClientName = booking.ClientName?.Name + " " + booking.ClientName?.Surname,
+                ClientName = booking.ClientName?.Email ?? "Sin Email asignado",
                 CheckInDate = booking.CheckInDate,
                 ChekOutDate = booking.ChekOutDate,
                 State = booking.State

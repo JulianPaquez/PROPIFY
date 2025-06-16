@@ -23,7 +23,7 @@ namespace Application.Services
 
         public async Task<IEnumerable<BookingDTO>> GetAllBookings()
         {
-            var booking = await _bookingRepository.GetAllAsync();
+            var booking = await _bookingRepository.GetAllWithClientAsync();
             return BookingDTO.CreateList(booking);
         }
         
@@ -37,18 +37,18 @@ namespace Application.Services
 
             return BookingDTO.Create(booking);
         }
-        public async Task<Booking?> AddBooking(BookingCreateRquest dto)
+        public async Task<Booking?> AddBooking(BookingCreateRquest request)
         {
-            var client = await _userRepository.GetByEmail(dto.ClientName);
+            var client = await _userRepository.GetByEmail(request.ClientName);
             if (client == null) throw new NotFoundException("La reserva no pudo ser creada.");
 
 
             var booking = new Booking
             {
-                PropertyId = dto.PropertyId,
+                PropertyId = request.PropertyId,
                 ClientName = client,
-                CheckInDate = dto.CheckInDate,
-                ChekOutDate = dto.ChekOutDate
+                CheckInDate = DateOnly.FromDateTime(request.CheckInDate),
+                ChekOutDate = DateOnly.FromDateTime(request.ChekOutDate)    
             };
 
              await _bookingRepository.CreateAsync(booking);
@@ -61,8 +61,8 @@ namespace Application.Services
             {
                 throw new NotFoundException("No se encontró la reserva a actualizar.");
             }
-            booking.CheckInDate = request.CheckInDate;
-            booking.ChekOutDate = request.ChekOutDate;
+            booking.CheckInDate = DateOnly.FromDateTime(request.CheckInDate);
+            booking.ChekOutDate = DateOnly.FromDateTime(request.ChekOutDate);
             booking.State = request.Statetate;
 
             await _bookingRepository.UpdateAsync(booking);

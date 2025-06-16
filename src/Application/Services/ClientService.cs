@@ -18,7 +18,7 @@ namespace Application.Services
             var list = await _clientRepository.GetAllAsync();
             return ClientDTO.CreateList(list);
         }
-        public async Task<ClientDTO?> GetById(int id)
+        public async Task<ClientDTO> GetById(int id)
         {
             var client = await _clientRepository.GetByIdAsync(id);
             if (client == null)
@@ -27,7 +27,7 @@ namespace Application.Services
             }
             return ClientDTO.Create(client);
         }
-        public async Task<Client?> Create(ClientCreateRequest dto)
+        public async Task<Client> Create(ClientCreateRequest dto)
         {
             var newClient = new Client(dto.Name, dto.Surname, dto.Email, dto.Password, dto.NumberPhone, dto.DocumentType, dto.Dni);
             await _clientRepository.CreateAsync(newClient);

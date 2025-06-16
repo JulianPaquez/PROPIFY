@@ -1,7 +1,7 @@
 public class BookingUpdateRequest
 {
-    public DateOnly CheckInDate { get; set; }
-    public DateOnly ChekOutDate { get; set; }
+    public DateTime CheckInDate { get; set; }
+    public DateTime ChekOutDate { get; set; }
     public ApprovalState Statetate { get; set; }
 
         
