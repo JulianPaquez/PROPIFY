@@ -1,19 +1,27 @@
+using domain.Interfaces;
 using Domain.Exceptions;
 
 public class PaymentsService : IPaymentsService
 {
     private readonly IPaymentsRepository _paymentsRepository;
+    private readonly IBookingRepository _bookingRepository;
 
-    public PaymentsService(IPaymentsRepository paymentsRepository)
+    public PaymentsService(IPaymentsRepository paymentsRepository, IBookingRepository bookingRepository)
     {
         _paymentsRepository = paymentsRepository;
+        _bookingRepository = bookingRepository;
+
     }
 
     public async Task<Payments> CrearPagoAsync(PaymentCreateRequest request)
     {
+        var reserva = await _bookingRepository.GetByIdAsync(request.ReservaId);
+        if (reserva == null)
+            return null;
+
         var pago = new Payments
         {
-            // ReservaId = request.ReservaId,
+            ReservaId = request.ReservaId,
             Amount = request.Amount,
             Taxes = request.Taxes,
             State = PaymentState.Pendiente,
@@ -24,7 +32,7 @@ public class PaymentsService : IPaymentsService
         return pago;
     }
 
-     public async Task<PaymentsDto> ObtenerPagoPorIdAsync(int id)
+    public async Task<PaymentsDto> ObtenerPagoPorIdAsync(int id)
     {
         var pago = await _paymentsRepository.GetByIdAsync(id);
         if (pago == null)
@@ -74,7 +82,7 @@ public class PaymentsService : IPaymentsService
 
         await _paymentsRepository.DeleteAsync(pago);
     }
-    
+
     private bool EsEstadoValido(string estado)
     {
         return estado == PaymentState.Pendiente ||
@@ -82,5 +90,5 @@ public class PaymentsService : IPaymentsService
                estado == PaymentState.Rechazado;
     }
 
-    
+
 }

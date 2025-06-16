@@ -26,12 +26,15 @@ public class PaymentsController : ControllerBase
         return Ok(pagos);
     }
 
-    [HttpPost]
-    public async Task<IActionResult> Create([FromBody] PaymentCreateRequest request)
-    {
-        var nuevoPago = await _paymentsService.CrearPagoAsync(request);
-        return CreatedAtAction(nameof(GetById), new { id = nuevoPago.Id }, nuevoPago);
-    }
+[HttpPost]
+public async Task<IActionResult> Create([FromBody] PaymentCreateRequest request)
+{
+    var pago = await _paymentsService.CrearPagoAsync(request);
+    if (pago == null)
+        return NotFound($"No existe ninguna reserva con ID {request.ReservaId}.");
+
+    return Ok(pago);
+}
 
     [HttpPut("{id}")]
 
