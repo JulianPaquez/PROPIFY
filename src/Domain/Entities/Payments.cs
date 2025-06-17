@@ -1,5 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
+using domain.Entities;
 
 public class Payments
 {
@@ -13,6 +15,8 @@ public class Payments
     public string State { get; set; }
 
     public string PaymentMethod { get; set; }
+    [JsonIgnore]
+     public Booking Booking { get; set; }
 
     public Payments() { }
 

@@ -12,13 +12,15 @@ namespace Application.Services
     {
         private readonly IBookingRepository _bookingRepository;
         private readonly IUserRepository _userRepository;
-    //private readonly IPropertyRepository _propertyRepository;
+        private readonly IPropertyRepository _propertyRepository;
+        private readonly IPaymentsRepository _paymentsRepository;
 
-        public BookingService(IBookingRepository bookingRepository, IUserRepository userRepository, IPropertyRepository propertyRepository)
+        public BookingService(IBookingRepository bookingRepository, IUserRepository userRepository, IPropertyRepository propertyRepository, IPaymentsRepository paymentsRepository)
         {
             _bookingRepository = bookingRepository;
             _userRepository = userRepository;
-           // _propertyRepository = propertyRepository;
+            _propertyRepository = propertyRepository;
+            _paymentsRepository = paymentsRepository;
         }
 
         public async Task<IEnumerable<BookingDTO>> GetAllBookings()
@@ -42,13 +44,27 @@ namespace Application.Services
             var client = await _userRepository.GetByEmail(request.ClientName);
             if (client == null) throw new NotFoundException("La reserva no pudo ser creada.");
 
+            var property = await _propertyRepository.GetByIdAsync(request.PropertyId);
+            if (property == null) throw new NotFoundException("Propiedad no encontrada");
+
+
 
             var booking = new Booking
             {
                 PropertyId = request.PropertyId,
+                Property = property,
                 ClientName = client,
                 CheckInDate = DateOnly.FromDateTime(request.CheckInDate),
-                ChekOutDate = DateOnly.FromDateTime(request.ChekOutDate)    
+                CheckOutDate = DateOnly.FromDateTime(request.CheckOutDate),   
+                NumbersOfTenants =  request.NumbersOfTenants,
+            };
+
+            booking.Payments = new Payments
+            {
+                Amount = booking.TotalPrice,
+                Taxes = booking.TotalPrice * 0.1f, // ejemplo: 10% de impuestos
+                State = "pendiente",
+                PaymentMethod = "Transferencia"
             };
 
              await _bookingRepository.CreateAsync(booking);
@@ -62,7 +78,8 @@ namespace Application.Services
                 throw new NotFoundException("No se encontró la reserva a actualizar.");
             }
             booking.CheckInDate = DateOnly.FromDateTime(request.CheckInDate);
-            booking.ChekOutDate = DateOnly.FromDateTime(request.ChekOutDate);
+            booking.CheckOutDate = DateOnly.FromDateTime(request.CheckOutDate);
+            booking.NumbersOfTenants = request.NumbersOfTenants;
             booking.State = request.Statetate;
 
             await _bookingRepository.UpdateAsync(booking);

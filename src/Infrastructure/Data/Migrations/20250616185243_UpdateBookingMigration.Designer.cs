@@ -3,6 +3,7 @@ using System;
 using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20250616185243_UpdateBookingMigration")]
+    partial class UpdateBookingMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.4");
@@ -41,9 +44,6 @@ namespace Infrastructure.Data.Migrations
                         .HasColumnType("REAL");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ReservaId")
-                        .IsUnique();
 
                     b.ToTable("Payments");
                 });
@@ -146,7 +146,7 @@ namespace Infrastructure.Data.Migrations
                     b.Property<DateOnly>("CheckInDate")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateOnly>("CheckOutDate")
+                    b.Property<DateOnly>("ChekOutDate")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("ClientNameId")
@@ -164,8 +164,6 @@ namespace Infrastructure.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ClientNameId");
-
-                    b.HasIndex("PropertyId");
 
                     b.ToTable("Bookings");
                 });
@@ -337,17 +335,6 @@ namespace Infrastructure.Data.Migrations
                     b.HasDiscriminator().HasValue("sysAdmin");
                 });
 
-            modelBuilder.Entity("Payments", b =>
-                {
-                    b.HasOne("domain.Entities.Booking", "Booking")
-                        .WithOne("Payments")
-                        .HasForeignKey("Payments", "ReservaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Booking");
-                });
-
             modelBuilder.Entity("Taxes", b =>
                 {
                     b.HasOne("domain.Entities.User", "PaidByUser")
@@ -383,15 +370,7 @@ namespace Infrastructure.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("domain.Entities.Property", "Property")
-                        .WithMany()
-                        .HasForeignKey("PropertyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("ClientName");
-
-                    b.Navigation("Property");
                 });
 
             modelBuilder.Entity("domain.Entities.Property", b =>
@@ -422,12 +401,6 @@ namespace Infrastructure.Data.Migrations
                     b.Navigation("Property");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("domain.Entities.Booking", b =>
-                {
-                    b.Navigation("Payments")
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

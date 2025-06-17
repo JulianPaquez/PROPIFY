@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace infrastructure.Repositories
 {
     public abstract class BaseRepository<T> : IBaseRepository<T> where T : class
-    {
+    { 
        protected readonly ApplicationContext _context;
         public BaseRepository(ApplicationContext context)
         {

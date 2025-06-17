@@ -8,7 +8,9 @@ namespace Application.Models
         public int PropertyId { get; set; }
         public string ClientName { get; set; } = null!;
         public DateOnly CheckInDate { get; set; }
-        public DateOnly ChekOutDate { get; set; }
+        public DateOnly CheckOutDate { get; set; }
+        public int NumbersOfTenants { get; set; }
+
 
         public ApprovalState State { get; set; } = ApprovalState.pending;
 
@@ -20,7 +22,8 @@ namespace Application.Models
                 PropertyId = booking.PropertyId,
                 ClientName = booking.ClientName?.Email ?? "Sin Email asignado",
                 CheckInDate = booking.CheckInDate,
-                ChekOutDate = booking.ChekOutDate,
+                CheckOutDate = booking.CheckOutDate,
+                NumbersOfTenants = booking.NumbersOfTenants,
                 State = booking.State
             };
         }

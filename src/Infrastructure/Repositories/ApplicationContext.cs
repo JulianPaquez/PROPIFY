@@ -28,12 +28,17 @@ namespace Infrastructure.Repositories
         .HasForeignKey(p => p.OwnerId)
         .OnDelete(DeleteBehavior.Cascade);
 
-        modelBuilder.Entity<User>()
-            .ToTable("Users")
-            .HasDiscriminator<string>("UserType")
-            .HasValue<SysAdmin>("sysAdmin")
-            .HasValue<Owner>("owner")
-            .HasValue<Client>("client");
+     modelBuilder.Entity<User>()
+        .ToTable("Users")
+        .HasDiscriminator<string>("UserType")
+        .HasValue<SysAdmin>("sysAdmin")
+        .HasValue<Owner>("owner")
+        .HasValue<Client>("client");
+
+     modelBuilder.Entity<Booking>()
+        .HasOne(b => b.Payments)
+        .WithOne(p => p.Booking)
+        .HasForeignKey<Payments>(p => p.ReservaId); 
             
         modelBuilder.Entity<Review>().ToTable("Reviews");
 
