@@ -39,6 +39,7 @@ namespace Application.Services
 
             return BookingDTO.Create(booking);
         }
+
         public async Task<Booking?> AddBooking(BookingCreateRquest request)
         {
             var client = await _userRepository.GetByEmail(request.ClientName);
@@ -47,16 +48,30 @@ namespace Application.Services
             var property = await _propertyRepository.GetByIdAsync(request.PropertyId);
             if (property == null) throw new NotFoundException("Propiedad no encontrada");
 
+            var checkInDate = DateOnly.FromDateTime(request.CheckInDate);
+            var checkOutDate = DateOnly.FromDateTime(request.CheckOutDate);
 
+            // 🔍 Validación de fechas ya reservadas para la propiedad
+            var existingBookings = await _bookingRepository.GetAllAsync();
+            bool hayConflicto = existingBookings.Any(b =>
+                b.PropertyId == request.PropertyId &&
+                checkInDate < b.CheckOutDate &&
+                checkOutDate > b.CheckInDate
+            );
+
+            if (hayConflicto)
+            {
+                throw new NotAllowedException("La propiedad ya está reservada en las fechas seleccionadas.");
+            }
 
             var booking = new Booking
             {
                 PropertyId = request.PropertyId,
                 Property = property,
                 ClientName = client,
-                CheckInDate = DateOnly.FromDateTime(request.CheckInDate),
-                CheckOutDate = DateOnly.FromDateTime(request.CheckOutDate),   
-                NumbersOfTenants =  request.NumbersOfTenants,
+                CheckInDate = checkInDate,
+                CheckOutDate = checkOutDate,
+                NumbersOfTenants = request.NumbersOfTenants,
             };
 
             booking.Payments = new Payments
@@ -67,10 +82,10 @@ namespace Application.Services
                 PaymentMethod = "Transferencia"
             };
 
-             await _bookingRepository.CreateAsync(booking);
+            await _bookingRepository.CreateAsync(booking);
             return booking;
         }
-        public async Task<Booking> UpdateBooking(int id, BookingUpdateRequest request)
+                public async Task<Booking> UpdateBooking(int id, BookingUpdateRequest request)
         {
             var booking = await _bookingRepository.GetByIdAsync(id);
             if (booking == null)
