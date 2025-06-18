@@ -46,7 +46,7 @@ namespace Application.Services
             if (client == null) throw new NotFoundException("La reserva no pudo ser creada.");
 
             var property = await _propertyRepository.GetByIdAsync(request.PropertyId);
-            if (property == null) throw new NotFoundException("Propiedad no encontrada");
+            if (property == null) throw new NotFoundException("La Propiedad no se encontró");
 
             var checkInDate = DateOnly.FromDateTime(request.CheckInDate);
             var checkOutDate = DateOnly.FromDateTime(request.CheckOutDate);
