@@ -1,4 +1,7 @@
+﻿using application.Interfaces;
 using Application.Models;
+using Application.Models.Request;
+using domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 [Route("api/[controller]")]
@@ -7,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 public class ClientController : ControllerBase
 {
     private readonly IClientService _clientService;
+
     public ClientController(IClientService clientService)
     {
         _clientService = clientService;
@@ -14,61 +18,55 @@ public class ClientController : ControllerBase
 
     [HttpGet]
 
-    public async Task<ActionResult<List<ClientDTO>>> GetAll()
+    public ActionResult<List<ClientDTO>> GetAll()
     {
-        var client = await _clientService.GetAll();
-        return Ok(client);
+        var clients = _clientService.GetAll();
+        return Ok(clients);
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<ClientDTO>> GetById(int id)
+    public ActionResult<ClientDTO> GetById(int id)
     {
-        try
+        var client =  _clientService.GetById(id);
+        if (client == null)
         {
-            var client = await _clientService.GetById(id);
-            return Ok(client);
+            return NotFound("Admin not found");
         }
-        catch (System.Exception)
-        {
-            return StatusCode(500, "No se pudo crear el cliente");
-        }
+        return Ok(client);
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] ClientCreateRequest request)
+    public ActionResult Create([FromBody] AddClientRequest request)
     {
-        var newClient = await _clientService.Create(request);
-        return Ok(newClient);
+        return Ok(_clientService.Create(request));
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update([FromRoute] int id, [FromBody] ClientUpdateRequest request)
+    public IActionResult Update([FromRoute] int id, AddClientRequest request)
     {
         try
         {
-            await _clientService.Update(id, request);
-            return StatusCode(200, "Se actualizó correctamente");
+            _clientService.Update(id, request);
+            return Ok();
         }
-        catch (System.Exception)
+        catch (Exception)
         {
 
-            return StatusCode(500, " No se pudieron actualizar los datos");
+            return StatusCode(500, "Propietario no encontrado");
         }
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete([FromRoute] int id)
+    public async Task<ActionResult> Delete(int id)
     {
-        try
+        Client client = await _clientService.GetById(id);
+        if(client != null)
         {
-            await _clientService.Delete(id);
+            _clientService.Delete(client);
             return Ok();
         }
-        catch (System.Exception)
-        {
-
-            return StatusCode(500, " No se encontro al cliente con ese id");
-        }
+        return StatusCode(500, "Propietario no encontrado");
     }
-    
+
+
 }
