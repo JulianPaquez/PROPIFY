@@ -1,4 +1,8 @@
-using domain.Entities;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Application.Models
 {
@@ -6,33 +10,10 @@ namespace Application.Models
     {
         public int Id { get; set; }
         public int PropertyId { get; set; }
-        public string ClientName { get; set; } = null!;
+        public int UserId { get; set; }
         public DateOnly CheckInDate { get; set; }
         public DateOnly ChekOutDate { get; set; }
 
-        public ApprovalState State { get; set; } = ApprovalState.pending;
-
-        public static BookingDTO Create(Booking booking)
-        {
-            return new BookingDTO
-            {
-                Id = booking.Id,
-                PropertyId = booking.PropertyId,
-                ClientName = booking.ClientName?.Email ?? "Sin Email asignado",
-                CheckInDate = booking.CheckInDate,
-                ChekOutDate = booking.ChekOutDate,
-                State = booking.State
-            };
-        }
-
-        public static List<BookingDTO> CreateList(IEnumerable<Booking> bookings)
-        {
-            if (bookings == null || !bookings.Any())
-            {
-                return null;
-            }
-
-            return bookings.Select(Create).ToList();
-        }
+        public ApprovalState state { get; set; } = ApprovalState.pending;
     }
 }
