@@ -18,16 +18,16 @@ public class BookingController : ControllerBase
 
     [HttpGet]
 
-    public ActionResult<List<BookingDTO>> GetAll()
+    public async Task<IActionResult> GetAll()
     {
-        var bookings = _bookingService.GetAll();
+        var bookings = await _bookingService.GetAll();
         return Ok(bookings);
     }
 
     [HttpGet("{id}")]
-    public ActionResult<BookingDTO> GetById(int id)
+    public async Task<IActionResult> GetById(int id)
     {
-        var client = _bookingService.GetById(id);
+        var client = await _bookingService.GetById(id);
         if (client == null)
         {
             return NotFound("Admin not found");
@@ -63,7 +63,7 @@ public class BookingController : ControllerBase
         if (booking != null)
         {
             _bookingService.Delete(booking);
-            return Ok();
+            return Ok("Deleted");
         }
         return StatusCode(500, "Propietario no encontrado");
     }
