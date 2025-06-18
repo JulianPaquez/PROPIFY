@@ -99,7 +99,7 @@ public class ImageController : ControllerBase
         }
         catch (Exception)
         {
-            return StatusCode(500, "Imagen no encontrada o no se pudo eliminar");
+            return StatusCode(500, "Imagen no se encontro o no se pudo eliminar");
         }
     }
 }
