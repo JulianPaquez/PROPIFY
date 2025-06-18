@@ -61,7 +61,7 @@ namespace Application.Services
 
             if (hayConflicto)
             {
-                throw new NotAllowedException("La propiedad ya está reservada en las fechas seleccionadas.");
+                throw new NotAllowedException("La propiedad ya se encuentra reservada en las fechas seleccionadas.");
             }
 
             var booking = new Booking
