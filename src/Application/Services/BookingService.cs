@@ -51,7 +51,7 @@ namespace Application.Services
             var checkInDate = DateOnly.FromDateTime(request.CheckInDate);
             var checkOutDate = DateOnly.FromDateTime(request.CheckOutDate);
 
-            // 🔍 Validación de fechas ya reservadas para la propiedad
+            
             var existingBookings = await _bookingRepository.GetAllAsync();
             bool hayConflicto = existingBookings.Any(b =>
                 b.PropertyId == request.PropertyId &&
