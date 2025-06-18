@@ -24,9 +24,7 @@ namespace infrastructure.Repositories
         .HasForeignKey(p => p.OwnerId)
         .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<Booking>().ToTable("Bookings");
-            modelBuilder.Entity<Client>().ToTable("Clients");
-            modelBuilder.Entity<Owner>().ToTable("Owner");
+    modelBuilder.Entity<Owner>().ToTable("Owner");
     modelBuilder.Entity<SysAdmin>().ToTable("SysAdmin");
 
     base.OnModelCreating(modelBuilder);
