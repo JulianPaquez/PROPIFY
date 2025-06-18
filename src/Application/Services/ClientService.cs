@@ -1,12 +1,7 @@
-﻿using application.Interfaces;
-using Application.Models.Request;
+using Application.Models;
 using domain.Entities;
 using domain.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Domain.Exceptions;
 
 namespace Application.Services
 {
@@ -18,38 +13,34 @@ namespace Application.Services
         {
             _clientRepository = clientRepository;
         }
-        public async Task<List<Client>> GetAll()
+        public async Task<IEnumerable<ClientDTO>> GetAll()
         {
-            return /*await*/ _clientRepository.GetAll();
+            var list = await _clientRepository.GetAllAsync();
+            return ClientDTO.CreateList(list);
         }
-        public async Task<Client?> GetById(int id)
+        public async Task<ClientDTO> GetById(int id)
         {
-            return /*await*/ _clientRepository.GetById(id);
-        }
-        public async Task<Client?> Create(AddClientRequest dto)
-        {
-            var existingClient = /*await*/ _clientRepository.GetAll();
-            if (existingClient.Any(c => c.Email == dto.Email))
+            var client = await _clientRepository.GetByIdAsync(id);
+            if (client == null)
             {
-                return null;
+                throw new NotFoundException("Cliente no encontrado.");
+            }
+            return ClientDTO.Create(client);
+        }
+        public async Task<Client> Create(ClientCreateRequest dto)
+        {
+            var newClient = new Client(dto.Name, dto.Surname, dto.Email, dto.Password, dto.NumberPhone, dto.DocumentType, dto.Dni);
+            await _clientRepository.CreateAsync(newClient);
+            return newClient;
+        }
+        public async Task<Client> Update(int id, ClientUpdateRequest request)
+        {
+            var client = await _clientRepository.GetByIdAsync(id);
+            if (client == null)
+            {
+                throw new NotFoundException("Cliente no encontrado.");
             }
 
-            var client = new Client
-            {
-                Name = dto.Name,
-                Surname = dto.Surname,
-                Email = dto.Email,
-                Password = dto.Password, //hashear
-                NumberPhone = dto.NumberPhone,
-                DocumentType = dto.DocumentType,
-                Dni = dto.Dni
-            };
-
-            return /*await*/ _clientRepository.Create(client);
-        }
-        public async Task Update(int id, AddClientRequest request)
-        {
-            var client = await GetById(id);
             client.Name = request.Name;
             client.Surname = request.Surname;
             client.Email = request.Email;
@@ -59,13 +50,19 @@ namespace Application.Services
             client.Dni = request.Dni;
 
             /*await*/
-            _clientRepository.Update(client);
+           await _clientRepository.UpdateAsync(client);
 
-            return /*client cuando se haga asincronica*/;
+            return client/*client cuando se haga asincronica*/;
         }
-        public async Task Delete(Client client)
+        public async Task Delete(int id)
         {
-            /*await*/ _clientRepository.Delete(client);   
+            var client = await _clientRepository.GetByIdAsync(id);
+            if (client == null)
+            {
+                throw new NotFoundException("Cliente no encontrado.");
+            }
+            /*await*/
+           await _clientRepository.DeleteAsync(client);   
         }
     }
 }

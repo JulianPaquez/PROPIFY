@@ -1,12 +1,9 @@
-﻿using application.Interfaces;
+using Application.Models;
 using Application.Models.Request;
 using domain.Entities;
 using domain.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Domain.Exceptions;
+using Domain.Interfaces;
 
 namespace Application.Services
 {
@@ -14,52 +11,73 @@ namespace Application.Services
     public class BookingService : IBookingService
     {
         private readonly IBookingRepository _bookingRepository;
+        private readonly IUserRepository _userRepository;
+    //private readonly IPropertyRepository _propertyRepository;
 
-        public BookingService(IBookingRepository bookingRepository)
+        public BookingService(IBookingRepository bookingRepository, IUserRepository userRepository, IPropertyRepository propertyRepository)
         {
             _bookingRepository = bookingRepository;
+            _userRepository = userRepository;
+           // _propertyRepository = propertyRepository;
         }
-        public async Task<List<Booking>> GetAll()
+
+        public async Task<IEnumerable<BookingDTO>> GetAllBookings()
         {
-            return _bookingRepository.GetAll();
+            var booking = await _bookingRepository.GetAllWithClientAsync();
+            return BookingDTO.CreateList(booking);
         }
-        public async Task<Booking?> GetById(int id)
+        
+        public async Task<BookingDTO?> GetBookingById(int id)
         {
-            return _bookingRepository.GetById(id);
-        }
-        public async Task<Booking?> Create(AddBookingRequest dto)
-        {
-            var existingClient = /*await*/ _bookingRepository.GetAll();
-            if (existingClient.Any(c => c.Id == dto.Id))
+            var booking = await _bookingRepository.GetByIdAsync(id);
+            if (booking == null)
             {
-                return null;
+                throw new NotFoundException("Reserva no encontrada");
             }
+
+            return BookingDTO.Create(booking);
+        }
+        public async Task<Booking?> AddBooking(BookingCreateRquest request)
+        {
+            var client = await _userRepository.GetByEmail(request.ClientName);
+            if (client == null) throw new NotFoundException("La reserva no pudo ser creada.");
+
 
             var booking = new Booking
             {
-                PropertyId = dto.PropertyId,
-                UserId = dto.UserId,
-                CheckInDate = dto.CheckInDate,
-                ChekOutDate = dto.ChekOutDate
+                PropertyId = request.PropertyId,
+                ClientName = client,
+                CheckInDate = DateOnly.FromDateTime(request.CheckInDate),
+                ChekOutDate = DateOnly.FromDateTime(request.ChekOutDate)    
             };
 
-            return /*await*/ _bookingRepository.Create(booking);
+             await _bookingRepository.CreateAsync(booking);
+            return booking;
         }
-        public async Task Update(int id, AddBookingRequest request)
+        public async Task<Booking> UpdateBooking(int id, BookingUpdateRequest request)
         {
-            var booking = await GetById(id);
-            booking.PropertyId = request.PropertyId;
-            booking.UserId = request.UserId;
-            booking.CheckInDate = request.CheckInDate;
-            booking.ChekOutDate = request.ChekOutDate;
+            var booking = await _bookingRepository.GetByIdAsync(id);
+            if (booking == null)
+            {
+                throw new NotFoundException("No se encontró la reserva a actualizar.");
+            }
+            booking.CheckInDate = DateOnly.FromDateTime(request.CheckInDate);
+            booking.ChekOutDate = DateOnly.FromDateTime(request.ChekOutDate);
+            booking.State = request.Statetate;
 
-            /*await*/ _bookingRepository.Update(booking);
+            await _bookingRepository.UpdateAsync(booking);
 
-            return /*booking cuando se haga asincronica*/;
+            return booking;
         }
-        public async Task Delete(Booking booking)
+        public async Task DeleteBooking(int id)
         {
-            /*await*/ _bookingRepository.Delete(booking);
+            var booking = await _bookingRepository.GetByIdAsync(id);
+            if (booking == null)
+            {
+                throw new NotFoundException("No se encontró la reserva a actualizar.");
+            }
+
+            await _bookingRepository.DeleteAsync(booking);
         }
     }
 }

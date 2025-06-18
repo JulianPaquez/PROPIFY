@@ -10,6 +10,11 @@
       <PrivateAssets></PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.4" />
+<<<<<<< HEAD
+=======
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.12.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.12.0" />
+>>>>>>> parent of 281c41a (Merge branch 'feature_ClientAndBookingCRUD')
   </ItemGroup>
 
   <PropertyGroup>

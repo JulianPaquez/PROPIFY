@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace domain.Entities
 {
@@ -14,10 +9,10 @@ namespace domain.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public int PropertyId { get; set; }
-        public int UserId { get; set; }
+        public User ClientName { get; set; }
         public DateOnly CheckInDate { get; set; }
         public DateOnly ChekOutDate { get; set; }
 
-        public ApprovalState state { get; set; } = ApprovalState.pending; 
+        public ApprovalState State { get; set; } = ApprovalState.pending; 
     }
 }

@@ -1,14 +1,11 @@
-﻿using Application.Models.Request;
+using Application.Models;
 using domain.Entities;
 
-namespace application.Interfaces
+public interface IClientService
 {
-    public interface IClientService
-    {
-        Task<List<Client>> GetAll();
-        Task<Client?> GetById(int id);
-        Task<Client?> Create(AddClientRequest dto);
-        Task Update(int id, AddClientRequest request);
-        Task Delete(Client client);
-    }
+    Task<IEnumerable<ClientDTO>> GetAll();
+    Task<ClientDTO?> GetById(int id);
+    Task<Client?> Create(ClientCreateRequest dto);
+    Task<Client> Update(int id, ClientUpdateRequest request);
+    Task Delete(int id);
 }

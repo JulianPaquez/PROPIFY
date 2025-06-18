@@ -1,19 +1,12 @@
-﻿using Application.Models.Request;
+using Application.Models;
+using Application.Models.Request;
 using domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace application.Interfaces
+public interface IBookingService
 {
-    public interface IBookingService
-    {
-        Task<List<Booking>> GetAll();
-        Task<Booking?> GetById(int id);
-        Task<Booking?> Create(AddBookingRequest dto);
-        Task Update(int id, AddBookingRequest request);
-        Task Delete(Booking booking);
-    }
+    Task<IEnumerable<BookingDTO>> GetAllBookings();
+    Task<BookingDTO?> GetBookingById(int id);
+    Task<Booking?> AddBooking(BookingCreateRquest dto);
+    Task<Booking> UpdateBooking(int id, BookingUpdateRequest request);
+    Task DeleteBooking(int id);
 }

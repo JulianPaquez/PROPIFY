@@ -49,7 +49,8 @@ namespace domain.Entities
         public string Pool {  get; set; }
 
         public Property() {}
-        public Property(string type, float squareMeters, int pricePerNight, string country, string province, string city, string street, int ownerId, Owner owner, int maxTenants, string description, PropertyState stateProperty, string bath, string room, string streammingPlatform, string pool)
+
+        public Property(string type, float squareMeters, int pricePerNight,string country, string province, string city, string street, int ownerId,Owner owner, int maxTenants,  string description, PropertyState stateProperty, string bath, string room, string streammingPlatform, string pool )
         {
             Type = type;
             SquareMeters = squareMeters;
@@ -69,6 +70,5 @@ namespace domain.Entities
             Pool = pool;
 
         }
-
     }
 }
