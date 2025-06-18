@@ -16,14 +16,16 @@ public class ImageController : ControllerBase
     private const string _chars = "abcdefghijklmnopqrstuvwxyz0123456789";
 
     public ImageController(IImageService imageService)
-        => _imageService = imageService;
+    {
+        _imageService = imageService;
+    }
 
     private static string RandomName(int length)
     {
-        Span<char> buffer = stackalloc char[length];
+        Span<char> random = stackalloc char[length];
         for (var i = 0; i < length; i++)
-            buffer[i] = _chars[_random.Next(_chars.Length)];
-        return new string(buffer);
+            random[i] = _chars[_random.Next(_chars.Length)];
+        return new string(random);
     }
 
 
@@ -50,7 +52,7 @@ public class ImageController : ControllerBase
         if (file is null || file.Length == 0)
             return BadRequest("No se especificó la imagen");
 
-        if (file.Length > 2_000_000)
+        if (file.Length > 2000000)
             return BadRequest("El tamaño máximo permitido es de 2 MB");
 
         var extension = Path.GetExtension(file.FileName).ToLowerInvariant();

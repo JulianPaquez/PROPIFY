@@ -18,18 +18,15 @@ namespace Domain.Entities
         public int UuidProperty { get; set; }
         [Required]
         public string Name { get; set; }
-        public string Path { get; set; }
         public DateTime CreatedDate { get; set; }
-        /*        public Property? Property { get; set; }
-        */
+        
         public Image() { }
 
-        public Image(int id, int uuidProperty, string name, string path, DateTime createdDate)
+        public Image(int id, int uuidProperty, string name,  DateTime createdDate)
         {
             Id = id;
             UuidProperty = uuidProperty;
             Name = name;
-            Path = path;
             CreatedDate = createdDate;
         }
     }

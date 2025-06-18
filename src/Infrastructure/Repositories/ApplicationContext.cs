@@ -1,4 +1,5 @@
 using domain.Entities;
+using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories
@@ -15,7 +16,7 @@ namespace Infrastructure.Repositories
         public DbSet<Taxes> Taxes { get; set; }
         public DbSet<Client> Clients { get; set; }
         public DbSet<Booking> Bookings{ get; set; }
-
+        public DbSet<Image> Images { get; set; }
         public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options)
         {
         }
