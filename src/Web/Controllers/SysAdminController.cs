@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 [Route("api/[controller]")]
 [ApiController]
@@ -12,6 +13,7 @@ public class SysAdminController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Roles = "sysAdmin")]
 
     public async Task<ActionResult<List<SysAdminDto>>> GetAll()
     {
@@ -20,6 +22,7 @@ public class SysAdminController : ControllerBase
     }
 
     [HttpGet("{id}")]
+    [Authorize(Roles = "sysAdmin")]
     public async Task<ActionResult<SysAdminDto>> GetById(int id)
     {
         try
@@ -35,6 +38,7 @@ public class SysAdminController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "sysAdmin")]
 
     public async Task<IActionResult> Create([FromBody] SysAdminCreateRequest request)
     {
@@ -43,6 +47,7 @@ public class SysAdminController : ControllerBase
     }
 
     [HttpPut("{id}")]
+    [Authorize(Roles = "sysAdmin")]
 
     public async Task<IActionResult> Update(int id, [FromBody] SysAdminUpdateRequest request)
     {
@@ -59,6 +64,7 @@ public class SysAdminController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [Authorize(Roles = "sysAdmin")]
     public async Task<IActionResult> Delete(int id)
     {
         try
@@ -69,7 +75,7 @@ public class SysAdminController : ControllerBase
         catch (System.Exception)
         {
 
-             return StatusCode(500, " No se encontro al sysadmin con ese id");
+            return StatusCode(500, " No se encontro al sysadmin con ese id");
         }
     }
 

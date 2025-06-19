@@ -1,4 +1,5 @@
 using Application.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 [Route("api/[controller]")]
@@ -13,6 +14,7 @@ public class ClientController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Roles = "sysAdmin")]
 
     public async Task<ActionResult<List<ClientDTO>>> GetAll()
     {
@@ -21,6 +23,7 @@ public class ClientController : ControllerBase
     }
 
     [HttpGet("{id}")]
+    [Authorize(Roles = "sysAdmin")]
     public async Task<ActionResult<ClientDTO>> GetById(int id)
     {
         try
@@ -42,6 +45,7 @@ public class ClientController : ControllerBase
     }
 
     [HttpPut("{id}")]
+    [Authorize(Roles = "sysAdmin, client")]
     public async Task<IActionResult> Update([FromRoute] int id, [FromBody] ClientUpdateRequest request)
     {
         try
@@ -57,6 +61,7 @@ public class ClientController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [Authorize(Roles = "sysAdmin")]
     public async Task<IActionResult> Delete([FromRoute] int id)
     {
         try

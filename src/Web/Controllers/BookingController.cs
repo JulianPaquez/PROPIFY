@@ -1,5 +1,6 @@
 using Application.Models;
 using Application.Models.Request;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 [Route("api/[controller]")]
@@ -14,6 +15,7 @@ public class BookingController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Roles = "sysAdmin, client, owner")]
     public async Task<ActionResult<List<BookingDTO>>> GetAll()
     {
         var booking = await _bookingService.GetAllBookings();
@@ -21,6 +23,7 @@ public class BookingController : ControllerBase
     }
 
     [HttpGet("{id}")]
+    [Authorize(Roles = "sysAdmin, client, owner")]
     public async Task<ActionResult<BookingDTO>> GetById([FromRoute] int id)
     {
         var booking = await _bookingService.GetBookingById(id);
@@ -29,6 +32,7 @@ public class BookingController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "sysAdmin, client, owner")]
     public async Task<IActionResult> Create([FromBody] BookingCreateRquest rEquest)
     {
         var newBooking = await _bookingService.AddBooking(rEquest);
@@ -37,6 +41,7 @@ public class BookingController : ControllerBase
     }
 
     [HttpPut("{id}")]
+    [Authorize(Roles = "sysAdmin, client, owner")]
     public async Task<IActionResult> Update([FromRoute] int id, [FromBody] BookingUpdateRequest request)
     {
         var updateBook = await _bookingService.UpdateBooking(id, request);
@@ -44,6 +49,7 @@ public class BookingController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [Authorize(Roles = "sysAdmin, client, owner")]
     public async Task<IActionResult> Delete([FromRoute] int id)
     {
         await _bookingService.DeleteBooking(id);

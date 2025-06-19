@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 [Route("api/[controller]")]
@@ -12,6 +13,7 @@ public class PaymentsController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Roles = "sysAdmin, client, owner")]
     public async Task<ActionResult> GetAll()
     {
         var pagos = await _paymentsService.ObtenerTodosLosPagosAsync();
@@ -19,6 +21,7 @@ public class PaymentsController : ControllerBase
     }
 
     [HttpGet("{id}")]
+    [Authorize(Roles = "sysAdmin, client, owner")]
 
     public async Task<ActionResult> GetById([FromRoute] int id)
     {
@@ -27,6 +30,7 @@ public class PaymentsController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "sysAdmin, client, owner")]
     public async Task<IActionResult> Create([FromBody] PaymentCreateRequest request)
     {
         var nuevoPago = await _paymentsService.CrearPagoAsync(request);
@@ -34,6 +38,7 @@ public class PaymentsController : ControllerBase
     }
 
     [HttpPut("{id}")]
+    [Authorize(Roles = "sysAdmin, client, owner")]
 
     public async Task<IActionResult> Update([FromRoute] int id, [FromBody] PaymentUpdateRequest request)
     {
@@ -42,6 +47,7 @@ public class PaymentsController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [Authorize(Roles = "sysAdmin, client, owner")]
     public async Task<IActionResult> Delete([FromRoute] int id)
     {
         await _paymentsService.EliminarPagoAsync(id);

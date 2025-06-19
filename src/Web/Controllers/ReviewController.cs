@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using application.DTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -15,6 +16,7 @@ public class ReviewController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Roles = "sysAdmin, client, owner")]
     public async Task<ActionResult<List<ReviewDto>>> GetAll()
     {
         var reviews = await _service.GetAllAsync();
@@ -22,6 +24,7 @@ public class ReviewController : ControllerBase
     }
 
     [HttpGet("{id}")]
+    [Authorize(Roles = "sysAdmin, client, owner")]
     public async Task<ActionResult<ReviewDto>> GetById(int id)
     {
         try
@@ -36,6 +39,7 @@ public class ReviewController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "sysAdmin, client, owner")]
     public async Task<IActionResult> Create([FromBody] ReviewCreateRequest request)
     {
         try
@@ -54,6 +58,7 @@ public class ReviewController : ControllerBase
     }
 
     [HttpPut("{id}")]
+    [Authorize(Roles = "sysAdmin, client, owner")]
     public async Task<IActionResult> Update(int id, [FromBody] ReviewUpdateRequest request)
     {
         try
@@ -68,6 +73,7 @@ public class ReviewController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [Authorize(Roles = "sysAdmin, client, owner")]
     public async Task<IActionResult> Delete(int id)
     {
         try

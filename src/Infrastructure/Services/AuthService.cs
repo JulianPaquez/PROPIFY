@@ -59,7 +59,8 @@ namespace Infrastructure.Services
             var claimsForToken = new List<Claim>();
             claimsForToken.Add(new Claim("sub", user.Id.ToString()));
             claimsForToken.Add(new Claim("given_name", user.Name));
-            //claimsForToken.Add(new Claim("role", user.Email));
+            claimsForToken.Add(new Claim("email", user.Email));
+            claimsForToken.Add(new Claim("password", user.Password));
             claimsForToken.Add(new Claim(ClaimTypes.Role, user.UserType));
 
             var jwtSecurityToken = new JwtSecurityToken(

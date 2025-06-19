@@ -1,6 +1,7 @@
 ﻿using Application.Interfaces;
 using Application.Models;
 using Application.Models.Request;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.IO;
 
@@ -30,6 +31,8 @@ public class ImageController : ControllerBase
 
 
     [HttpGet("{name}")]
+
+    [Authorize(Roles = "sysAdmin, owner")]
     public async Task<ActionResult<ImageDto>> GetByName(string name)
     {
         try
@@ -47,6 +50,7 @@ public class ImageController : ControllerBase
     }
 
     [HttpPost("upload-image")]
+    [Authorize(Roles = "sysAdmin, owner")]
     public async Task<IActionResult> UploadImage(IFormFile file)
     {
         if (file is null || file.Length == 0)
@@ -72,6 +76,7 @@ public class ImageController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "sysAdmin, owner")]
     public async Task<IActionResult> Create(ImageCreateRequest request)
     {
         var existsLocally = System.IO.File.Exists(Path.Combine(_pathImage, request.Name));
@@ -90,6 +95,7 @@ public class ImageController : ControllerBase
     }
 
     [HttpDelete("{name}")]
+    [Authorize(Roles = "sysAdmin, owner")]
     public async Task<IActionResult> Delete(string name)
     {
         try
