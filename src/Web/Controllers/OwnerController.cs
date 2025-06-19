@@ -15,7 +15,7 @@ public class OwnerController : ControllerBase
     }
 
     [HttpGet]
-    [Authorize(Roles = "sysAdmin")]
+    
 
     public async Task<ActionResult<List<OwnerDTO>>> GetAll()
     {
@@ -24,7 +24,7 @@ public class OwnerController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    [Authorize(Roles = "sysAdmin")]
+
     public async Task<ActionResult<OwnerDTO>> GetById(int id)
     {
         try

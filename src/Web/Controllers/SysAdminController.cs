@@ -13,7 +13,6 @@ public class SysAdminController : ControllerBase
     }
 
     [HttpGet]
-    [Authorize(Roles = "sysAdmin")]
 
     public async Task<ActionResult<List<SysAdminDto>>> GetAll()
     {
@@ -22,7 +21,6 @@ public class SysAdminController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    [Authorize(Roles = "sysAdmin")]
     public async Task<ActionResult<SysAdminDto>> GetById(int id)
     {
         try

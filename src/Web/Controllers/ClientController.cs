@@ -14,7 +14,7 @@ public class ClientController : ControllerBase
     }
 
     [HttpGet]
-    [Authorize(Roles = "sysAdmin")]
+  
 
     public async Task<ActionResult<List<ClientDTO>>> GetAll()
     {
@@ -23,7 +23,7 @@ public class ClientController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    [Authorize(Roles = "sysAdmin")]
+   
     public async Task<ActionResult<ClientDTO>> GetById(int id)
     {
         try
