@@ -43,8 +43,8 @@ public class PropertyController : ControllerBase
     {
         try
         {
-           var crearPropiedad= await _propertyService.Create(request);
-            return CreatedAtAction(nameof(GetById),new{ id = crearPropiedad.Id}, crearPropiedad );
+            var crearPropiedad = await _propertyService.Create(request);
+            return CreatedAtAction(nameof(GetById), new { id = crearPropiedad.Id }, crearPropiedad);
 
         }
         catch (System.Exception)
@@ -83,5 +83,21 @@ public class PropertyController : ControllerBase
             return StatusCode(500, "La propiedad no ha podido ser eliminada");
         }
 
+    }
+    
+
+    [HttpGet("available")]
+    [AllowAnonymous]
+    public async Task<IActionResult> GetAvailable(
+        [FromQuery] string province,
+        [FromQuery] DateTime checkIn,
+        [FromQuery] DateTime checkOut,
+        [FromQuery] int people)
+    {
+        var checkInDate = DateOnly.FromDateTime(checkIn);
+        var checkOutDate = DateOnly.FromDateTime(checkOut);
+
+        var available = await _propertyService.GetAvailableProperties(province, checkInDate, checkOutDate, people);
+        return Ok(available);
     }
 }

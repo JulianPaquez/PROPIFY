@@ -1,34 +1,37 @@
 using System.Threading.Tasks;
 using domain.Entities;
+using domain.Interfaces;
 
 public class PropertyService : IPropertyService
 {
     private readonly IPropertyRepository _repository;
     private readonly IOwnerRepository _ownerRepository;
+    private readonly IBookingRepository _bookingRepository;
 
-    public PropertyService(IPropertyRepository repository, IOwnerRepository ownerRepository)
+    public PropertyService(IPropertyRepository repository, IOwnerRepository ownerRepository, IBookingRepository bookingRepository)
     {
         _repository = repository;
         _ownerRepository = ownerRepository;
+        _bookingRepository = bookingRepository;
     }
 
-    public  async Task<IEnumerable<PropertyDto>> GetAll()
+    public async Task<IEnumerable<PropertyDto>> GetAll()
     {
         var list = await _repository.GetAllAsync();
         return PropertyDto.CreateList(list);
     }
 
-    public async Task<PropertyDto> GetById(int id) 
+    public async Task<PropertyDto> GetById(int id)
     {
         var list = await _repository.GetByIdAsync(id);
 
-        if(list == null) 
+        if (list == null)
         {
             throw new Exception("Propiedad no encontrada");
-            
+
         }
         return PropertyDto.Create(list);
-        
+
     }
 
     public async Task<Property> Create(PropertyCreateRequest request)
@@ -86,7 +89,7 @@ public class PropertyService : IPropertyService
         await _repository.UpdateAsync(property);
         return property;
 
-       
+
     }
 
     public async Task Delete(int id)
@@ -98,4 +101,25 @@ public class PropertyService : IPropertyService
         }
         await _repository.DeleteAsync(property);
     }
+    
+    public async Task<List<PropertyDto>> GetAvailableProperties(string province, DateOnly checkIn, DateOnly checkOut, int maxPeople)
+{
+    var allProperties = await _repository.GetAllAsync(); // Incluye Owner
+
+    // Traer todas las reservas con PropertyId (para filtrar las fechas)
+    var allBookings = await _bookingRepository.GetAllAsync();
+
+    // Filtrar propiedades disponibles
+    var available = allProperties.Where(prop =>
+        prop.Province.ToLower() == province.ToLower() &&
+        prop.MaxTenants >= maxPeople &&
+        !allBookings.Any(b =>
+            b.PropertyId == prop.Id &&
+            checkIn < b.CheckOutDate &&
+            checkOut > b.CheckInDate // conflicto de fechas
+        )
+    ).ToList();
+
+    return available.Select(p => PropertyDto.Create(p)).ToList();
+}
 }
